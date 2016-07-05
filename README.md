@@ -1,0 +1,2 @@
+This repository holds a Java application used for simulating planetary orbits.
+The app was created for use in a PWS (Profielwerkstuk) project for the Stedelijk Gymnasium Nijmegen (the Netherlands) by Christiaan Goossens and Daniel Boutros.
