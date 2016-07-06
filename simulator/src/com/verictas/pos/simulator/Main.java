@@ -1,16 +1,19 @@
 package com.verictas.pos.simulator;
+
 import javax.vecmath.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Object object1 = new Object(1000, new Vector3f(1,2,3), new Vector3f(0,4,3));
+        Object object2 = new Object(200, new Vector3f(2,38,2), new Vector3f(3,4,5));
+        Object object3 = new Object(200, new Vector3f(2,-20,2), new Vector3f(3,4,5));
+        Object object4 = new Object(200, new Vector3f(2,4,2), new Vector3f(3,4,5));
 
-        Object object1 = new Object(10E8, new Vector3f(1,2,3), new Vector3f(0,4,3));
-        Object object2 = new Object(20E4, new Vector3f(2,38,2), new Vector3f(3,4,5));
+        // Make a list of all the objects
+        Object[] objects = {object1, object2, object3, object4};
 
-        System.out.println(object1.toString());
-        System.out.println(object2.toString());
-        System.out.println(object1.getForceOnObject(object2));
+        // Start the simulation
+        Simulator.run(2, objects);
     }
 }
