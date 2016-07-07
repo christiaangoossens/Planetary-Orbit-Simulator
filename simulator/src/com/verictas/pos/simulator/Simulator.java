@@ -1,6 +1,6 @@
 package com.verictas.pos.simulator;
 import javax.vecmath.*;
-import com.verictas.pos.simulator.mathUtils.Vector3fMatrix;
+import com.verictas.pos.simulator.mathUtils.Vector3dMatrix;
 
 public class Simulator {
     public static void run(int rounds, Object[] objects) {
@@ -22,7 +22,7 @@ public class Simulator {
             /**
              * Define the forces matrix for this round
              */
-            Vector3fMatrix matrix = new Vector3fMatrix(objects.length,objects.length);
+            Vector3dMatrix matrix = new Vector3dMatrix(objects.length,objects.length);
 
             for(int i = 0; i < objects.length; i++) {
                 /**
@@ -36,7 +36,7 @@ public class Simulator {
                         break;
                     }
 
-                    Vector3f force = objects[i].getForceOnObject(objects[o]);
+                    Vector3d force = objects[i].getForceOnObject(objects[o]);
                     matrix.setPosition(force, i, o);
                     System.out.println("Force " + (i + 1) + " on " + (o + 1) + " - " + force);
 
