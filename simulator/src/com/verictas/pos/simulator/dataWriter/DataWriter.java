@@ -1,5 +1,6 @@
 package com.verictas.pos.simulator.dataWriter;
 
+import com.verictas.pos.simulator.SimulatorConfig;
 import com.verictas.pos.simulator.mathUtils.AU;
 
 import javax.vecmath.Vector3d;
@@ -16,6 +17,8 @@ public class DataWriter {
     private static final String DELIMITER = "\t";
     private static final String NEW_LINE = "\n";
 
+    private int counter = 0;
+
     public DataWriter() throws WritingException {
         try {
             // Define the save path
@@ -30,11 +33,12 @@ public class DataWriter {
             }
 
             this.writer = new FileWriter(path);
-            this.writer.write("Object" + DELIMITER + "Position (m)" + DELIMITER + "Position (AU)" + DELIMITER + "Speed (m)" + DELIMITER + "Speed (AU)" + DELIMITER + "Old Acceleration" + DELIMITER + "Acceleration" + DELIMITER + "Mass" + NEW_LINE);
+            this.writer.write("Object" + DELIMITER + "Position (m)" + DELIMITER + "Position (AU)" + DELIMITER + "Speed (m/s)" + DELIMITER + "Speed (AU/day)" + DELIMITER + "Old Acceleration" + DELIMITER + "Acceleration" + DELIMITER + "Mass" + NEW_LINE);
+            this.counter++;
         } catch(IOException e) {
-            throw new WritingException("Whoop! Creation error!");
+            throw new WritingException("The destination file couldn't be created.");
         } catch(Exception e) {
-            throw new WritingException("Whoop! Unknown creation error!");
+            throw new WritingException("Some unknown error occurred while writing to the file!");
         }
     }
 
@@ -43,9 +47,13 @@ public class DataWriter {
             throw new WritingException("The writer isn't defined yet");
         } else {
             try {
-                this.writer.append(string);
+                if (this.counter % SimulatorConfig.skipLines == 0) {
+                    this.writer.append(string);
+                }
+                this.counter++;
             } catch (Exception e) {
-                throw new WritingException("Whoop! Write error!");
+                e.printStackTrace();
+                throw new WritingException("An error occurred while writing to the file!");
             }
         }
     }
@@ -55,10 +63,13 @@ public class DataWriter {
             throw new WritingException("The writer isn't defined yet");
         } else {
             try {
-                this.writer.append(id + DELIMITER + position.toString() + DELIMITER + AU.convertFromMeter(position).toString() + DELIMITER + speed.toString() + DELIMITER + AU.convertFromMetersPerSecond(speed).toString() + DELIMITER + oldAcceleration.toString() + DELIMITER + acceleration.toString() + DELIMITER + String.valueOf(mass) + NEW_LINE);
+                if (this.counter % SimulatorConfig.skipLines == 0) {
+                    this.writer.append(id + DELIMITER + position.toString() + DELIMITER + AU.convertFromMeter(position).toString() + DELIMITER + speed.toString() + DELIMITER + AU.convertFromMetersPerSecond(speed).toString() + DELIMITER + oldAcceleration.toString() + DELIMITER + acceleration.toString() + DELIMITER + String.valueOf(mass) + NEW_LINE);
+                }
+                this.counter++;
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new WritingException("Whoop! Write error!");
+                throw new WritingException("An error occurred while writing to the file!");
             }
         }
     }
@@ -74,6 +85,10 @@ public class DataWriter {
                 throw new WritingException("Whoop! Save error!");
             }
         }
+    }
+
+    public int getLines() {
+        return this.counter;
     }
 
     public String getCurrentTimeStamp() {
