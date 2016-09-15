@@ -16,7 +16,7 @@ public class Main {
      * The MIT License (MIT)
      * Copyright (c) 2016 Christiaan Goossens (Verictas) & Daniel Boutros
      *
-     * The full license is included in the git respository as LICENSE.md
+     * The full license is included in the git repository as LICENSE.md
      */
 
     public static void main(String[] args) {

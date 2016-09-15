@@ -13,13 +13,16 @@ public class Simulator {
          */
 
         int rounds = SimulatorConfig.rounds;
+        double time = SimulatorConfig.time;
 
         /**
          * Log a debug message to the console to signal the simulation has started
          */
         System.out.println("========== Simulation Started ==========\n");
 
-        // Create a timer
+        /**
+         * Create a time to measure runtime
+         */
         long startTime = System.currentTimeMillis();
 
         /**
@@ -52,10 +55,6 @@ public class Simulator {
                  * The round has started
                  */
                 System.out.println("\nRound " + (t + 1) + " started!");
-                /**
-                 * Define the initial values
-                 */
-                double time = SimulatorConfig.time;
 
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updatePosition(time);
@@ -64,15 +63,14 @@ public class Simulator {
 
                 accelerate(objects, matrix);
 
-                /**
-                 * Print the matrix for this round
-                 */
-
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updateSpeed(time);
                     writer.write(objects[i].name, objects[i].position, objects[i].speed, objects[i].oldAcceleration, objects[i].acceleration, objects[i].mass);
                 }
 
+                /**
+                 * The round has ended
+                 */
             }
 
             /**
@@ -81,7 +79,9 @@ public class Simulator {
             writer.save();
             System.out.println("========== Simulation Finished ==========");
 
-            // Display time info
+            /**
+             * Display information about the program runtime
+             */
             long stopTime = System.currentTimeMillis();
             System.out.println("Simulation took: " + (stopTime - startTime) + "ms");
         } catch(WritingException e) {

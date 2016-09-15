@@ -25,9 +25,6 @@ public class Object {
         this.mass = mass;
         this.position = position;
         this.speed = speed;
-
-        System.out.println(speed);
-
         this.oldAcceleration = new Vector3d(0,0,0);
         this.acceleration = new Vector3d(0,0,0);
     }
