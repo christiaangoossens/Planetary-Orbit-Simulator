@@ -1,5 +1,6 @@
 package com.verictas.pos.simulator.dataWriter;
 
+import com.verictas.pos.simulator.Object;
 import com.verictas.pos.simulator.SimulatorConfig;
 import com.verictas.pos.simulator.mathUtils.AU;
 
@@ -47,7 +48,7 @@ public class DataWriter {
              * Open a file to write to and write the header
              */
             this.writer = new FileWriter(path);
-            this.writer.write("Object" + DELIMITER + "Position (m)" + DELIMITER + "Position (AU)" + DELIMITER + "Speed (m/s)" + DELIMITER + "Speed (AU/day)" + DELIMITER + "Old Acceleration" + DELIMITER + "Acceleration" + DELIMITER + "Mass" + NEW_LINE);
+            this.writer.write("Object" + DELIMITER + "Position (m)" + DELIMITER + "Position (AU)" + DELIMITER+ "Distance from the sun (m)" + DELIMITER + "Speed (m/s)" + DELIMITER + "Speed (AU/day)" + DELIMITER + "Old Acceleration" + DELIMITER + "Acceleration" + DELIMITER + "Mass" + NEW_LINE);
             this.counter++;
         } catch(IOException e) {
             throw new WritingException("The destination file couldn't be created.");
@@ -78,22 +79,29 @@ public class DataWriter {
     }
 
     /**
-     * Writes some data about the current object to the file
-     * @param id String
-     * @param position Vector3d
-     * @param speed Vector3d
-     * @param oldAcceleration Vector3d
-     * @param acceleration Vector3d
-     * @param mass double
+     *
+     * @param object The object you want to write data about
+     * @param reference The system's star
      * @throws WritingException
      */
-    public void write(String id, Vector3d position, Vector3d speed, Vector3d oldAcceleration, Vector3d acceleration, double mass) throws WritingException {
+    public void write(Object object, Object reference) throws WritingException {
+        String id = object.name;
+        Vector3d position = object.position;
+        Vector3d speed = object.speed;
+        Vector3d oldAcceleration = object.oldAcceleration;
+        Vector3d acceleration = object.acceleration;
+        double mass = object.mass;
+
         if (this.writer == null) {
             throw new WritingException("The writer isn't defined yet");
         } else {
             try {
                 if (this.counter % SimulatorConfig.skipLines == 0) {
-                    this.writer.append(id + DELIMITER + position.toString() + DELIMITER + AU.convertFromMeter(position).toString() + DELIMITER + speed.toString() + DELIMITER + AU.convertFromMetersPerSecond(speed).toString() + DELIMITER + oldAcceleration.toString() + DELIMITER + acceleration.toString() + DELIMITER + String.valueOf(mass) + NEW_LINE);
+
+                    // Calculate the distance to the sun
+                    double sunDistance = object.getDistance(reference).length();
+
+                    this.writer.append(id + DELIMITER + position.toString() + DELIMITER + AU.convertFromMeter(position).toString() + DELIMITER + String.valueOf(sunDistance) + DELIMITER + speed.toString() + DELIMITER + AU.convertFromMetersPerSecond(speed).toString() + DELIMITER + oldAcceleration.toString() + DELIMITER + acceleration.toString() + DELIMITER + String.valueOf(mass) + NEW_LINE);
                 }
                 this.counter++;
             } catch (Exception e) {

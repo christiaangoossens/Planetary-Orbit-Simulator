@@ -10,6 +10,11 @@ public class Object {
     public Vector3d acceleration;
     public Vector3d oldAcceleration;
 
+    public Vector3d aphelion;
+    public Vector3d perihelion;
+    public double aphelionDistance = 0;
+    public double perihelionDistance = 0;
+
     public String name;
 
     private double gravitationalConstant = 6.67384E-11;
@@ -196,5 +201,39 @@ public class Object {
         Vector3d acceleration = force;
         acceleration.scale(factor);
         this.acceleration = acceleration;
+    }
+
+    /**
+     * Processes the aphelion & perihelion
+     * @param sun
+     */
+    public void processAphelionAndPerihelion(Object sun) {
+        double sunDistance = this.getDistance(sun).length();
+
+        /**
+         * Set the defaults
+         */
+
+        if (this.aphelionDistance == 0) {
+            this.aphelionDistance = sunDistance;
+        }
+
+        if (this.perihelionDistance == 0) {
+            this.perihelionDistance = sunDistance;
+        }
+
+        /**
+         * Check if the aphelion or perihelion should be changed
+         */
+
+        if (sunDistance > aphelionDistance) {
+            this.aphelion = position;
+            this.aphelionDistance = sunDistance;
+        }
+
+        if (sunDistance < perihelionDistance) {
+            this.perihelion = position;
+            this.perihelionDistance = sunDistance;
+        }
     }
 }

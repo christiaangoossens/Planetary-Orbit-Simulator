@@ -38,7 +38,7 @@ public class Simulator {
              */
 
             for(int i = 0; i < objects.length; i++) {
-                writer.write(objects[i].name, objects[i].position, objects[i].speed, objects[i].oldAcceleration, objects[i].acceleration, objects[i].mass);
+                writer.write(objects[i], objects[0]);
             }
 
             /**
@@ -65,7 +65,13 @@ public class Simulator {
 
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updateSpeed(time);
-                    writer.write(objects[i].name, objects[i].position, objects[i].speed, objects[i].oldAcceleration, objects[i].acceleration, objects[i].mass);
+                    writer.write(objects[i], objects[0]);
+
+                    /**
+                     * Do some processing to get the aphelion & perihelion
+                     */
+
+                    objects[i].processAphelionAndPerihelion(objects[0]);
                 }
 
                 /**
@@ -78,6 +84,15 @@ public class Simulator {
              */
             writer.save();
             System.out.println("========== Simulation Finished ==========");
+
+            // TEST
+
+            System.out.println("\n\n============== Simulation data =============");
+            System.out.println("Position during aphelion: " + objects[1].aphelion);
+            System.out.println("Distance from the sun during aphelion in km: " + objects[1].aphelionDistance);
+            System.out.println("Position during perihelion: " + objects[1].perihelion);
+            System.out.println("Distance from the sun during perihelion in km: " + objects[1].perihelionDistance);
+            System.out.println("===========================================\n\n");
 
             /**
              * Display information about the program runtime
