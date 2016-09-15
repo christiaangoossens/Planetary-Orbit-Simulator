@@ -3,7 +3,6 @@ import javax.vecmath.*;
 
 import com.verictas.pos.simulator.dataWriter.DataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
-import com.verictas.pos.simulator.mathUtils.AU;
 import com.verictas.pos.simulator.mathUtils.Vector3dMatrix;
 
 public class Simulator {
@@ -70,6 +69,7 @@ public class Simulator {
                  */
 
                 for(int i = 0; i < objects.length; i++) {
+                    objects[i].updateSpeed(time);
                     writer.write(objects[i].name, objects[i].position, objects[i].speed, objects[i].oldAcceleration, objects[i].acceleration, objects[i].mass);
                 }
 
