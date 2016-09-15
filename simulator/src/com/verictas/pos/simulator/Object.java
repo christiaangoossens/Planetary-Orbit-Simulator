@@ -10,6 +10,8 @@ public class Object {
     public Vector3d acceleration;
     public Vector3d oldAcceleration;
 
+    public String name;
+
     private double gravitationalConstant = 6.67384E-11;
 
     /**
@@ -18,10 +20,16 @@ public class Object {
      * @param position The position vector of the object
      * @param speed The speed vector of the object
      */
-    public Object(double mass, Vector3d position, Vector3d speed) {
+    public Object(String name, double mass, Vector3d position, Vector3d speed) {
+        this.name = name;
         this.mass = mass;
         this.position = position;
         this.speed = speed;
+
+        System.out.println(speed);
+
+        this.oldAcceleration = new Vector3d(0,0,0);
+        this.acceleration = new Vector3d(0,0,0);
     }
 
     /**

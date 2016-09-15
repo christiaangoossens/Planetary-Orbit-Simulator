@@ -1,5 +1,9 @@
 package com.verictas.pos.simulator;
 import javax.vecmath.*;
+
+import com.verictas.pos.simulator.dataWriter.DataWriter;
+import com.verictas.pos.simulator.dataWriter.WritingException;
+import com.verictas.pos.simulator.mathUtils.AU;
 import com.verictas.pos.simulator.mathUtils.Vector3dMatrix;
 
 public class Simulator {
@@ -16,49 +20,73 @@ public class Simulator {
          */
         System.out.println("========== Simulation Started ==========\n");
 
+        // Create a timer
+        long startTime = System.currentTimeMillis();
+
         /**
-         * Define the forces matrix for this round
+         * Define the forces matrix and the DataWriter
          */
         Vector3dMatrix matrix = new Vector3dMatrix(objects.length,objects.length);
 
-        accelerate(objects, matrix);
+        try {
+            DataWriter writer = new DataWriter();
 
-        /**
-         * Start the rounds loop
-         */
-        for(int t = 0; t != rounds; t++) {
             /**
-             * The round has started
+             * Write begin values
              */
-            System.out.println("\nRound " + (t + 1) + " started!");
-            /**
-             * Define the initial values
-             */
-            double time = SimulatorConfig.time;
 
             for(int i = 0; i < objects.length; i++) {
-                System.out.println("Object " + (i+1) + " was at " + objects[i].position);
-                objects[i].updatePosition(time);
-                objects[i].updateAcceleration();
-                System.out.println("Object " + (i+1) + " is at " + objects[i].position);
+                writer.write(objects[i].name, objects[i].position, objects[i].speed, objects[i].oldAcceleration, objects[i].acceleration, objects[i].mass);
             }
+
+            /**
+             * Start the leap frog integration!
+             */
 
             accelerate(objects, matrix);
 
             /**
-             * Print the matrix for this round
+             * Start the rounds loop
              */
+            for(int t = 0; t != rounds; t++) {
+                /**
+                 * The round has started
+                 */
+                System.out.println("\nRound " + (t + 1) + " started!");
+                /**
+                 * Define the initial values
+                 */
+                double time = SimulatorConfig.time;
 
-            for(int i = 0; i < objects.length; i++) {
-                objects[i].updateSpeed(time);
+                for(int i = 0; i < objects.length; i++) {
+                    objects[i].updatePosition(time);
+                    objects[i].updateAcceleration();
+                }
+
+                accelerate(objects, matrix);
+
+                /**
+                 * Print the matrix for this round
+                 */
+
+                for(int i = 0; i < objects.length; i++) {
+                    writer.write(objects[i].name, objects[i].position, objects[i].speed, objects[i].oldAcceleration, objects[i].acceleration, objects[i].mass);
+                }
+
             }
 
-        }
+            /**
+             * Log that the simulation has finished and save info to file
+             */
+            writer.save();
+            System.out.println("========== Simulation Finished ==========");
 
-        /**
-         * Log that the simulation has finished
-         */
-        System.out.println("========== Simulation Finished ==========");
+            // Display time info
+            long stopTime = System.currentTimeMillis();
+            System.out.println("Simulation took: " + (stopTime - startTime) + "ms");
+        } catch(WritingException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void accelerate(Object[] objects, Vector3dMatrix matrix) {
