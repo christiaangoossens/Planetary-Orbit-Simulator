@@ -113,7 +113,6 @@ public class Vector3dMatrix extends GMatrix {
             resultVector.add(new Vector3d(x, y, z));
         }
 
-        System.out.println(resultVector);
         return resultVector;
     }
 
@@ -142,7 +141,6 @@ public class Vector3dMatrix extends GMatrix {
             resultVector.add(new Vector3d(x, y, z));
         }
 
-        System.out.println(resultVector);
         return resultVector;
     }
 }

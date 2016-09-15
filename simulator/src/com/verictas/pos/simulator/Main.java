@@ -21,21 +21,18 @@ public class Main {
         /**
          * Object definitions
          */
-        Object object1 = new Object(1000, new Vector3d(1,2,3), new Vector3d(0,4,3));
-        Object object2 = new Object(200, new Vector3d(2,38,2), new Vector3d(3,4,5));
-        Object object3 = new Object(200, new Vector3d(2,-20,2), new Vector3d(3,4,5));
-        Object object4 = new Object(200, new Vector3d(2,4,2), new Vector3d(3,4,5));
+        Object object1 = new Object(1/6.67384E-11, new Vector3d(1,0,0), new Vector3d(0,0,0));
+        Object object2 = new Object(1, new Vector3d(0,0,0), new Vector3d(0,0,0));
 
         /**
          * Object listing
          */
 
-        Object[] objects = {object1, object2, object3, object4};
+        Object[] objects = {object1, object2};
 
         /**
-         * Run the simulator for the specified amount of rounds
+         * Run the simulator for the specified objects
          */
-        int rounds = 2;
-        Simulator.run(rounds, objects);
+        Simulator.run(objects);
     }
 }
