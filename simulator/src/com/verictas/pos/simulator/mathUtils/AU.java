@@ -50,6 +50,10 @@ public class AU {
         return output;
     }
 
+    public static double convertFromMeter(double input) {
+        return input * 6.6845871E-12;
+    }
+
     /**
      * Converts m/s to AU/day for data collection
      * @param input Vector3d with values in m/s

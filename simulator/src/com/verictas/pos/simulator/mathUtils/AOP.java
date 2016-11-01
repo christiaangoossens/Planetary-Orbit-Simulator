@@ -9,6 +9,11 @@ public class AOP {
     public static double calculate(Vector3d ascendingNode, Vector3d perihelion, Vector3d aphelion) {
         Vector3d eccentricity = new Vector3d(0,0,0);
         eccentricity.sub(perihelion, aphelion);
-        return ascendingNode.angle(eccentricity);
+
+        if (perihelion.getY() > ascendingNode.getY()) {
+            return ascendingNode.angle(eccentricity);
+        } else {
+            return (2 * Math.PI) - ascendingNode.angle(eccentricity);
+        }
     }
 }

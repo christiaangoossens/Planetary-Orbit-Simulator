@@ -37,7 +37,7 @@ public class Processor {
         }
     }
 
-    public void process(Object[] objectArray) throws ProcessingException, WritingException {
+    public void process(Object[] objectArray, int rounds) throws ProcessingException, WritingException {
         HashMap<String, Object> objects = objectArrayToHashMap(objectArray);
 
         /**
@@ -48,54 +48,68 @@ public class Processor {
 
             object.setObjectData(objects.get(objectName));
             object.setReferenceObjectData(objects.get(SimulatorConfig.sunName));
+            object.processHistory(rounds);
 
             // Check if the object has gone round last round
 
             boolean round = object.processRoundCheck();
             if (round) {
-                // Object has gone full circle last round!
-                System.out.println("\n\n============== ROTATION DATA: " + objectName.toUpperCase() + " =============");
-                System.out.println("Current position (AU): " + AU.convertFromMeter(objects.get(objectName).position));
-                System.out.println("Current position (m): " + objects.get(objectName).position + "\n");
+                // Process the nodes
+                object.processNodes();
 
-                if (object.ascendingNode != null) {
-                    System.out.println("Ascending node (AU): " + AU.convertFromMeter(object.ascendingNode));
-                    System.out.println("Ascending node (m): " + object.ascendingNode + "\n");
-                } else {
-                    if (object.descendingNode != null) {
-                        System.out.println("WARNING:: Ascending node not found. Because a descending node was found, you can assume the current position is the ascending node (or it is between the starting position and the current.\n");
-                    } else {
-                        System.out.println("WARNING:: Ascending node not found. Have you set the reference plane height correctly?\n");
-                    }
-                }
+                // ECHO:: Object has gone full circle last round!
+                System.out.println("\n\n============== ROTATION DATA: " + objectName.toUpperCase() + ", ROUND " + (rounds - 1) + " =============");
 
-                if (object.descendingNode != null) {
-                    System.out.println("Descending node (AU): " + AU.convertFromMeter(object.descendingNode));
-                    System.out.println("Descending node (m): " + object.descendingNode + "\n");
-                } else {
+                if (SimulatorConfig.outputUnit == "AU") {
+                    System.out.println("Current position (AU): " + AU.convertFromMeter(objects.get(objectName).position) + "\n");
+                    System.out.println("Highest point (z-axis graph) (AU): " + AU.convertFromMeter(object.absoluteMax));
+                    System.out.println("Lowest point (z-axis graph) (AU): " + AU.convertFromMeter(object.absoluteMin));
+                    System.out.println("Calculated reference height (AU) : " + AU.convertFromMeter(object.referenceZ) + "\n");
+
                     if (object.ascendingNode != null) {
-                        System.out.println("WARNING:: Descending node not found. Because a ascending node was found, you can assume the current position is the descending node (or it is between the starting position and the current).\n");
+                        System.out.println("Ascending node (AU): " + AU.convertFromMeter(object.ascendingNode));
                     } else {
-                        System.out.println("WARNING:: Descending node not found. Have you set the reference plane height correctly?\n");
+                        System.out.println("WARNING:: Ascending node not found.");
                     }
+
+                    if (object.descendingNode != null) {
+                        System.out.println("Descending node (AU): " + AU.convertFromMeter(object.descendingNode) + "\n");
+                    } else {
+                        System.out.println("WARNING:: Descending node not found.\n");
+                    }
+
+                    System.out.println("Position during apastron (AU): " + AU.convertFromMeter(object.aphelion));
+                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000 + "\n");
+                    System.out.println("Position during periastron (AU): " + AU.convertFromMeter(object.perihelion));
+                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
+                } else {
+                    System.out.println("Current position (m): " + objects.get(objectName).position + "\n");
+                    System.out.println("Highest point (z-axis graph) (m): " + object.absoluteMax);
+                    System.out.println("Lowest point (z-axis graph) (m): " + object.absoluteMin);
+                    System.out.println("Calculated reference height (m) : " + object.referenceZ + "\n");
+
+                    if (object.ascendingNode != null) {
+                        System.out.println("Ascending node (m): " + object.ascendingNode);
+                    } else {
+                        System.out.println("WARNING:: Ascending node not found.");
+                    }
+
+                    if (object.descendingNode != null) {
+                        System.out.println("Descending node (m): " + object.descendingNode + "\n");
+                    } else {
+                        System.out.println("WARNING:: Descending node not found.\n");
+                    }
+
+                    System.out.println("Position during apastron (m): " + object.aphelion);
+                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000 + "\n");
+                    System.out.println("Position during periastron (m): " + object.perihelion);
+                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
                 }
 
-                System.out.println("Position during apastron (AU): " + AU.convertFromMeter(object.aphelion));
-                System.out.println("Position during apastron (m): " + object.aphelion);
-                System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in m: " + object.aphelionDistance + "\n");
-                System.out.println("Position during periastron (AU): " + AU.convertFromMeter(object.perihelion));
-                System.out.println("Position during periastron (m): " + object.perihelion);
-                System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in m: " + object.perihelionDistance + "\n");
-
                 if (object.ascendingNode != null) {
-                    System.out.println("Argument of periapsis (range: 0 - PI): " + AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion) + " rad");
-                    System.out.println("Argument of periapsis: " + Math.toDegrees(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion)) + " degrees");
+                    System.out.println("Argument of periapsis (radians): " + AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion));
+                    System.out.println("Argument of periapsis (degrees): " + Math.toDegrees(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion)));
                 } else {
-                    if (object.descendingNode != null) {
-                        System.out.println("WARNING:: Ascending node not found. The argument is calculated with the current position as ascending node).\n");
-                        System.out.println("Argument of periapsis (range: 0 - PI): " + AOP.calculate(objects.get(objectName).position, object.perihelion, object.aphelion) + " rad");
-                        System.out.println("Argument of periapsis: " + Math.toDegrees(AOP.calculate(objects.get(objectName).position, object.perihelion, object.aphelion)) + " degrees");
-                    }
                     System.out.println("ERROR:: Can't calculate the argument of periapsis because the ascending node is missing.");
                 }
 
@@ -109,7 +123,7 @@ public class Processor {
 
             // Process values for this round
             object.processAphelionAndPerihelion();
-            object.processNodes();
+            object.calculateTops();
 
             this.objects.put(objectName, object);
         }

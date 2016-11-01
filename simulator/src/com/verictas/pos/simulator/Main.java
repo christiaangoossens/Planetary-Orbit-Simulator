@@ -35,15 +35,18 @@ public class Main {
         //Object moon = new Object("The Moon", 734.9E20, AU.convertToMeter(new Vector3d(1.002390058141768E+00,-1.318677081380600E-01,-1.051759034600983E-04)), AU.convertToMetersPerSecond(new Vector3d(2.294349896503608E-03,1.752303034437222E-02,-5.522655228080146E-05)));
 
         // 1 januari startdag
-       Object sun = new Object("Sun", 1.988544E30, AU.convertToMeter(new Vector3d(3.737881713150281E-03,1.402397586692506E-03,-1.612700291840256E-04)), AU.convertToMetersPerSecond(new Vector3d(8.619338996535534E-07,6.895607793642275E-06,-2.794074909231784E-08)));
-       Object earth = new Object("Earth", 5.97219E24, AU.convertToMeter(new Vector3d(-1.630229002588497E-01,9.704723344534316E-01,-1.955367328932975E-04)), AU.convertToMetersPerSecond(new Vector3d(-1.723383356491747E-02,-2.969134550063944E-03,-4.433758674928828E-07)));
+        Object sun = new Object("Sun", 1.988544E30, AU.convertToMeter(new Vector3d(3.737881713150281E-03,1.402397586692506E-03,-1.612700291840256E-04)), AU.convertToMetersPerSecond(new Vector3d(8.619338996535534E-07,6.895607793642275E-06,-2.794074909231784E-08)));
+        Object earth = new Object("Earth", 5.97219E24, AU.convertToMeter(new Vector3d(-1.630229002588497E-01,9.704723344534316E-01,-1.955367328932975E-04)), AU.convertToMetersPerSecond(new Vector3d(-1.723383356491747E-02,-2.969134550063944E-03,-4.433758674928828E-07)));
         Object moon = new Object("The Moon", 734.9E20, AU.convertToMeter(new Vector3d(-1.657103868749121E-01,9.706382026425473E-01,-1.879812512691582E-04)), AU.convertToMetersPerSecond(new Vector3d(-1.728100931961937E-02,-3.525371122447976E-03,4.909148618073602E-05)));
+        Object jupiter = new Object("Jupiter", 1898.13E24, AU.convertToMeter(new Vector3d(-5.172279968303672E+00,1.591564562098799E+00,1.090553487095606E-01)), AU.convertToMetersPerSecond(new Vector3d(-2.306423668033420E-03,-6.856869314900905E-03,8.012916249248967E-05)));
+        Object saturn = new Object("Saturn", 5.68319E26, AU.convertToMeter(new Vector3d(-3.710637850378867E+00,-9.289569433157130E+00,3.091990731378936E-01)), AU.convertToMetersPerSecond(new Vector3d(4.874750391005278E-03,-2.086615906689840E-03,-1.574898601194673E-04)));
+        Object venus = new Object("Venus", 48.685E23, AU.convertToMeter(new Vector3d(-7.130901319004951E-01,-5.719763212192740E-02,4.040076577877051E-02)), AU.convertToMetersPerSecond(new Vector3d(1.525993024372452E-03,-2.024175581604569E-02,-3.656582385749146E-04)));
 
         /**
          * Object listing
          */
 
-        Object[] objects = {sun, earth, moon};
+        Object[] objects = {sun, earth, moon, jupiter, saturn};
 
 
         /**

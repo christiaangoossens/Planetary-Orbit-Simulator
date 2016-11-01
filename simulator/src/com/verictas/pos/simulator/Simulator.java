@@ -64,7 +64,7 @@ public class Simulator {
                 /**
                  * Do the processing on the objects
                  */
-                processor.process(objects);
+                processor.process(objects, t + 1);
 
                 /**
                  * The round has ended

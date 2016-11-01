@@ -1,10 +1,9 @@
 package com.verictas.pos.simulator.processor;
 
 import com.verictas.pos.simulator.Object;
-import com.verictas.pos.simulator.SimulatorConfig;
-import com.verictas.pos.simulator.mathUtils.AU;
-
 import javax.vecmath.Vector3d;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ObjectProcessor {
     public Vector3d aphelion;
@@ -22,9 +21,12 @@ public class ObjectProcessor {
     public Vector3d ascendingNode;
     public Vector3d descendingNode;
 
-    public double zAxisDistance = -1;
-    public double pastzAxisDistance = -1;
-    public Vector3d lastPos;
+    public Vector3d absoluteMax;
+    public Vector3d absoluteMin;
+
+    public double referenceZ;
+
+    public HashMap<Integer, Vector3d[]> history = new HashMap<>();
 
     public void setStartingPosition(Vector3d position) {
         this.startingPosition = position;
@@ -36,6 +38,14 @@ public class ObjectProcessor {
 
     public void setReferenceObjectData(Object object) {
         this.referenceObject = object;
+    }
+
+    /**
+     * Keep an history of the object position and speed (for logging and further processing)
+     */
+
+    public void processHistory(int round) {
+        this.history.put(round, new Vector3d[] {this.thisObject.position, this.thisObject.speed});
     }
 
     /**
@@ -71,57 +81,67 @@ public class ObjectProcessor {
         }
     }
 
+
     /**
-     * Get the ascending node
+     * Get the absolute maximum and minimum positions (max z and min z)
+     */
+
+    public void calculateTops() {
+        if (this.absoluteMax == null) {
+            this.absoluteMax = this.thisObject.position;
+        }
+
+        if (this.absoluteMin == null) {
+            this.absoluteMin = this.thisObject.position;
+        }
+
+        if (this.thisObject.position.getZ() > this.absoluteMax.getZ()) {
+            this.absoluteMax = this.thisObject.position;
+        }
+
+        if (this.thisObject.position.getZ() < this.absoluteMin.getZ()) {
+            this.absoluteMin = this.thisObject.position;
+        }
+    }
+    /**
+     * Process the nodes
      */
 
     public void processNodes() {
-        double zAxisDistance = Math.abs(this.thisObject.position.getZ() - SimulatorConfig.z);
+        this.referenceZ = (this.absoluteMin.getZ() + this.absoluteMax.getZ()) / 2;
 
-        if (this.pastzAxisDistance == -1) {
-            this.pastzAxisDistance = zAxisDistance;
-        }
+        // Loop through the entire history
+        for (Map.Entry<Integer, Vector3d[]> entry : this.history.entrySet()) {
+            Integer round = entry.getKey();
+            Vector3d[] vectorArray = entry.getValue();
 
-        if (this.pastzAxisDistance != -1 && this.zAxisDistance == -1) {
-            this.zAxisDistance = zAxisDistance;
-        }
-
-        if (this.zAxisDistance != -1 && this.pastzAxisDistance != 1) {
-            if ((this.pastzAxisDistance > this.zAxisDistance && zAxisDistance > this.zAxisDistance) && (this.zAxisDistance < SimulatorConfig.zThreshold)) {
-                if (SimulatorConfig.outputUnit.equals("AU")) {
-                    System.out.println("INFO:: Found a node within the threshold at " + AU.convertFromMeter(this.lastPos) + " (in AU) for object " + this.thisObject.name + "!");
-                } else {
-                    System.out.println("INFO:: Found a node within the threshold at " + this.lastPos + " (in m) for object " + this.thisObject.name + "!");
-                }
-
-                if ((this.lastPos.getZ() - this.thisObject.position.getZ()) < 0) {
-                    if (SimulatorConfig.z < 0) {
-                        // The reference plane is in negative z, so you have gone up!
-                        this.ascendingNode = this.lastPos;
-                        System.out.println("INFO:: Detected node as: ASCENDING NODE!");
+            if (this.history.get(round + 1) != null) {
+                // There is a next key!
+                if (vectorArray[0].getZ() < referenceZ && this.history.get(round + 1)[0].getZ() > referenceZ) {
+                    // This point is below the reference height and the next is above. This point is the ascending node (with positive z)
+                    if (referenceZ <= 0) {
+                        // Descending
+                        this.descendingNode = vectorArray[0];
+                        System.out.println("INFO:: Found a descending node at round " + round + " at position: " + vectorArray[0]);
                     } else {
-                        // The reference plane is in positive z, so you have gone down!
-                        this.descendingNode = this.lastPos;
-                        System.out.println("INFO:: Detected node as: DESCENDING NODE!");
+                        // Ascending
+                        this.ascendingNode = vectorArray[0];
+                        System.out.println("INFO:: Found a ascending node at round " + round + " at position: " + vectorArray[0]);
                     }
-                } else {
-                    if (SimulatorConfig.z < 0) {
-                        // The reference plane is in negative z, so you have gone down!
-                        this.descendingNode = this.lastPos;
-                        System.out.println("INFO:: Detected node as: DESCENDING NODE!");
+                } else if (vectorArray[0].getZ() > referenceZ && this.history.get(round + 1)[0].getZ() < referenceZ) {
+                    // This point is above the reference height and the next is below. This point is the descending node (with positive z)
+                    if (referenceZ <= 0) {
+                        // Ascending
+                        this.ascendingNode = vectorArray[0];
+                        System.out.println("INFO:: Found a ascending node at round " + round + " at position: " + vectorArray[0]);
                     } else {
-                        // The reference plane is in positive z, so you have gone up!
-                        this.ascendingNode = this.lastPos;
-                        System.out.println("INFO:: Detected node as: ASCENDING NODE!");
+                        // Descending
+                        this.descendingNode = vectorArray[0];
+                        System.out.println("INFO:: Found a descending node at round " + round + " at position: " + vectorArray[0]);
                     }
                 }
             }
-
-            this.pastzAxisDistance = this.zAxisDistance;
-            this.zAxisDistance = zAxisDistance;
         }
-
-        this.lastPos = this.thisObject.position;
     }
 
     /**
@@ -178,7 +198,9 @@ public class ObjectProcessor {
         perihelion = null;
         ascendingNode = null;
         descendingNode = null;
-        zAxisDistance = -1;
-        lastPos = null;
+        history = new HashMap<>();
+        absoluteMax = null;
+        absoluteMin = null;
+        referenceZ = -1;
     }
 }
