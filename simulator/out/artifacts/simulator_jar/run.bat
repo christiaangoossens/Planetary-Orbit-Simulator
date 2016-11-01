@@ -1,2 +1,2 @@
-java -jar simulator.jar
+java -jar simulator.jar > log.txt
 pause

@@ -1,15 +1,19 @@
 package com.verictas.pos.simulator.dataWriter;
 
 import com.verictas.pos.simulator.Object;
+import com.verictas.pos.simulator.Simulator;
 import com.verictas.pos.simulator.SimulatorConfig;
 import com.verictas.pos.simulator.mathUtils.AU;
+import com.verictas.pos.simulator.processor.ObjectProcessor;
 
 import javax.vecmath.Vector3d;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.math.RoundingMode;
+import java.text.*;
 import java.util.Date;
+import java.util.Locale;
 
 public class DataWriter {
     private FileWriter writer = null;
@@ -23,10 +27,21 @@ public class DataWriter {
     private int counter = 0;
 
     /**
+     * Decimal formatter
+     */
+
+    public DecimalFormat formatter = new DecimalFormat();
+
+    /**
      * Constructor
      * @throws WritingException
      */
     public DataWriter() throws WritingException {
+
+        /**
+         * Prepare the locale
+         */
+
         try {
             /**
              * Define the save path
@@ -48,8 +63,33 @@ public class DataWriter {
              * Open a file to write to and write the header
              */
             this.writer = new FileWriter(path);
-            this.writer.write("Object" + DELIMITER + "Position (m)" + DELIMITER + "Position (AU)" + DELIMITER+ "Distance from the sun (m)" + DELIMITER + "Speed (m/s)" + DELIMITER + "Speed (AU/day)" + DELIMITER + "Old Acceleration" + DELIMITER + "Acceleration" + DELIMITER + "Mass" + NEW_LINE);
+
+            /**
+             * Write the lines with information about the columns
+             */
+
+            if (SimulatorConfig.outputUnit.equals("AU")) {
+                this.writer.write("Object" + DELIMITER + "X (AU)" + DELIMITER + "Y (AU)" + DELIMITER + "Z (AU)" + DELIMITER + "VX (AU/day)" + DELIMITER + "VY (AU/day)" + DELIMITER + "VZ (AU/day)" + NEW_LINE);
+            } else {
+                this.writer.write("Object" + DELIMITER + "X (m)" + DELIMITER + "Y (m)" + DELIMITER + "Z (m)" + DELIMITER + "VX (m/s)" + DELIMITER + "VY (m/s)" + DELIMITER + "VZ (m/s)" + NEW_LINE);
+            }
+
             this.counter++;
+
+            /**
+             * Configure the decimal formatter
+             */
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            if (SimulatorConfig.outputNumbers == 0) {
+                symbols.setDecimalSeparator(',');
+                symbols.setGroupingSeparator('.');
+            } else {
+                symbols.setDecimalSeparator('.');
+                symbols.setGroupingSeparator(',');
+            }
+            this.formatter.setDecimalFormatSymbols(symbols);
+            this.formatter.setMinimumFractionDigits(0);
+            this.formatter.setMaximumFractionDigits(25);
         } catch(IOException e) {
             throw new WritingException("The destination file couldn't be created.");
         } catch(Exception e) {
@@ -88,20 +128,19 @@ public class DataWriter {
         String id = object.name;
         Vector3d position = object.position;
         Vector3d speed = object.speed;
-        Vector3d oldAcceleration = object.oldAcceleration;
-        Vector3d acceleration = object.acceleration;
-        double mass = object.mass;
+        Vector3d AUposition = AU.convertFromMeter(position);
+        Vector3d AUspeed = AU.convertFromMetersPerSecond(speed);
 
         if (this.writer == null) {
             throw new WritingException("The writer isn't defined yet");
         } else {
             try {
                 if (this.counter % SimulatorConfig.skipLines == 0) {
-
-                    // Calculate the distance to the sun
-                    double sunDistance = object.getDistance(reference).length();
-
-                    this.writer.append(id + DELIMITER + position.toString() + DELIMITER + AU.convertFromMeter(position).toString() + DELIMITER + String.valueOf(sunDistance) + DELIMITER + speed.toString() + DELIMITER + AU.convertFromMetersPerSecond(speed).toString() + DELIMITER + oldAcceleration.toString() + DELIMITER + acceleration.toString() + DELIMITER + String.valueOf(mass) + NEW_LINE);
+                    if (SimulatorConfig.outputUnit.equals("AU")) {
+                        this.writer.append(id + DELIMITER + decimalFormatter(AUposition.getX()) + DELIMITER + decimalFormatter(AUposition.getY()) + DELIMITER + decimalFormatter(AUposition.getZ()) + DELIMITER + decimalFormatter(AUspeed.getX()) + DELIMITER + decimalFormatter(AUspeed.getY()) + DELIMITER + decimalFormatter(AUspeed.getZ()) + NEW_LINE);
+                    } else {
+                        this.writer.append(id + DELIMITER + decimalFormatter(position.getX()) + DELIMITER + decimalFormatter(position.getY()) + DELIMITER + decimalFormatter(position.getZ()) + DELIMITER + decimalFormatter(speed.getX()) + DELIMITER + decimalFormatter(speed.getY()) + DELIMITER + decimalFormatter(speed.getZ()) + NEW_LINE);
+                    }
                 }
                 this.counter++;
             } catch (Exception e) {
@@ -109,6 +148,10 @@ public class DataWriter {
                 throw new WritingException("An error occurred while writing to the file!");
             }
         }
+    }
+
+    private String decimalFormatter(double input) {
+        return this.formatter.format(input);
     }
 
     /**

@@ -2,7 +2,7 @@ package com.verictas.pos.simulator.mathUtils;
 
 import javax.vecmath.Vector3d;
 
-public  class AU {
+public class AU {
     /**
      * Helper class for working with astronomical units
      */

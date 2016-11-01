@@ -1,9 +1,10 @@
 package com.verictas.pos.simulator;
 import javax.vecmath.*;
 
-import com.verictas.pos.simulator.dataWriter.DataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
 import com.verictas.pos.simulator.mathUtils.Vector3dMatrix;
+import com.verictas.pos.simulator.processor.ProcessingException;
+import com.verictas.pos.simulator.processor.Processor;
 
 public class Simulator {
     public static void run(Object[] objects) {
@@ -28,18 +29,10 @@ public class Simulator {
         /**
          * Define the forces matrix and the DataWriter
          */
-        Vector3dMatrix matrix = new Vector3dMatrix(objects.length,objects.length);
+        Vector3dMatrix matrix = new Vector3dMatrix(objects.length, objects.length);
 
         try {
-            DataWriter writer = new DataWriter();
-
-            /**
-             * Write begin values
-             */
-
-            for(int i = 0; i < objects.length; i++) {
-                writer.write(objects[i], objects[0]);
-            }
+            Processor processor = new Processor(objects);
 
             /**
              * Start the leap frog integration!
@@ -54,7 +47,8 @@ public class Simulator {
                 /**
                  * The round has started
                  */
-                System.out.println("\nRound " + (t + 1) + " started!");
+                //System.out.println("\nRound " + (t + 1) + " started!");
+                System.out.println("Round " + (t + 1) + " started!");
 
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updatePosition(time);
@@ -65,14 +59,12 @@ public class Simulator {
 
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updateSpeed(time);
-                    writer.write(objects[i], objects[0]);
-
-                    /**
-                     * Do some processing to get the aphelion & perihelion
-                     */
-
-                    objects[i].processAphelionAndPerihelion(objects[0]);
                 }
+
+                /**
+                 * Do the processing on the objects
+                 */
+                processor.process(objects);
 
                 /**
                  * The round has ended
@@ -82,23 +74,16 @@ public class Simulator {
             /**
              * Log that the simulation has finished and save info to file
              */
-            writer.save();
+            processor.close();
             System.out.println("========== Simulation Finished ==========");
-
-            // TEST
-
-            System.out.println("\n\n============== Simulation data =============");
-            System.out.println("Position during aphelion: " + objects[1].aphelion);
-            System.out.println("Distance from the sun during aphelion in km: " + objects[1].aphelionDistance);
-            System.out.println("Position during perihelion: " + objects[1].perihelion);
-            System.out.println("Distance from the sun during perihelion in km: " + objects[1].perihelionDistance);
-            System.out.println("===========================================\n\n");
 
             /**
              * Display information about the program runtime
              */
             long stopTime = System.currentTimeMillis();
             System.out.println("Simulation took: " + (stopTime - startTime) + "ms");
+        } catch(ProcessingException e) {
+            e.printStackTrace();
         } catch(WritingException e) {
             e.printStackTrace();
         }
@@ -124,27 +109,27 @@ public class Simulator {
 
                 Vector3d force = objects[i].getForceOnObject(objects[o]);
                 matrix.setPosition(force, i, o);
-                System.out.println("Force " + (i + 1) + " on " + (o + 1) + " - " + force);
+                //System.out.println("Force " + (i + 1) + " on " + (o + 1) + " - " + force);
 
                 /**
                  * Also put in the opposite force
                  */
                 force.scale(-1);
                 matrix.setPosition(force, o, i);
-                System.out.println("Force " + (o + 1) + " on " + (i + 1) + " - " + force);
+                //System.out.println("Force " + (o + 1) + " on " + (i + 1) + " - " + force);
             }
         }
 
 
-        System.out.println("\n");
-        System.out.println(matrix);
+        //System.out.println("\n");
+        //System.out.println(matrix);
 
         for(int i = 0; i < objects.length; i++) {
             /**
              * Progress forces on the object
              */
             Vector3d forceOnI = matrix.getColumnTotal(i);
-            System.out.println("All forces on " + (i + 1) + " - " + forceOnI);
+            //System.out.println("All forces on " + (i + 1) + " - " + forceOnI);
             objects[i].enactForceOnObject(forceOnI);
         }
     }
