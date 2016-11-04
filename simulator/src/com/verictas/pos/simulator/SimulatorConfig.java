@@ -5,7 +5,7 @@ public class SimulatorConfig {
      * Time settings
      */
 
-    public static int rounds = 526100 * 10; // Amount of rounds to run the simulator for
+    public static int rounds = 526100 * 35; // Amount of rounds to run the simulator for
     public static double time = 60; // Time steps in seconds
 
     /**

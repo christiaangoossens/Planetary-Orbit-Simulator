@@ -7,12 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17f368cb-44f8-4101-9a29-49a0f4ff1f92" name="Default" comment="Update workspace">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/Node.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AOP.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AOP.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AU.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AU.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/Processor.java" afterPath="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/Processor.java" />
     </list>
@@ -49,38 +47,98 @@
       <file leaf-file-name="Simulator.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3">
-              <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+            <state relative-caret-position="136">
+              <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#run#0;class#Simulator#0" expanded="false" />
                 <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ObjectProcessor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-479">
-              <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
+            <state relative-caret-position="629">
+              <caret line="39" column="94" selection-start-line="39" selection-start-column="94" selection-end-line="39" selection-end-column="94" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimulatorConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Node.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Node.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="544">
+              <caret line="34" column="27" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#processAphelionAndPerihelion#0;class#ObjectProcessor#0" expanded="false" />
-                <element signature="method#calculateTops#0;class#ObjectProcessor#0" expanded="false" />
-                <element signature="method#processNodes#0;class#ObjectProcessor#0" expanded="false" />
-                <element signature="method#processRoundCheck#0;class#ObjectProcessor#0" expanded="false" />
-                <element signature="method#reset#0;class#ObjectProcessor#0" expanded="false" />
+                <element signature="e#287#288#0" expanded="true" />
+                <element signature="e#319#320#0" expanded="true" />
+                <element signature="e#394#395#0" expanded="true" />
+                <element signature="e#439#440#0" expanded="true" />
+                <element signature="method#empty#0;class#Node#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Processor.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Object.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Object.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1850">
+              <caret line="146" column="7" selection-start-line="146" selection-start-column="7" selection-end-line="146" selection-end-column="7" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#getSpeed#0;class#Object#0" expanded="false" />
+                <element signature="method#getPosition#0;class#Object#0" expanded="false" />
+                <element signature="method#setAcceleration#1;class#Object#0" expanded="false" />
+                <element signature="method#getAcceleration#0;class#Object#0" expanded="false" />
+                <element signature="method#setOldAcceleration#1;class#Object#0" expanded="false" />
+                <element signature="method#getOldAcceleration#0;class#Object#0" expanded="false" />
+                <element signature="method#toString#0;class#Object#0" expanded="false" />
+                <element signature="method#getForceOnObject#0;class#Object#0" expanded="false" />
+                <element signature="method#getDistance#1;class#Object#0" expanded="false" />
+                <element signature="method#updatePosition#0;class#Object#0" expanded="false" />
+                <element signature="method#updateSpeed#0;class#Object#0" expanded="false" />
+                <element signature="method#enactForceOnObject#0;class#Object#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectProcessor.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="109" column="72" selection-start-line="109" selection-start-column="72" selection-end-line="109" selection-end-column="72" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1132#1133#0" expanded="true" />
+                <element signature="e#1172#1173#0" expanded="true" />
+                <element signature="method#processRoundCheck#0;class#ObjectProcessor#0" expanded="false" />
+                <element signature="method#cleanHistory#0;class#ObjectProcessor#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Processor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/Processor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="102" column="64" selection-start-line="102" selection-start-column="64" selection-end-line="102" selection-end-column="64" />
+            <state relative-caret-position="544">
+              <caret line="63" column="62" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="62" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#objectArrayToHashMap#0;class#Processor#0" expanded="false" />
@@ -131,12 +189,13 @@
         <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/Object.java" />
         <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/dataWriter/DataWriter.java" />
         <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AU.java" />
-        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java" />
-        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java" />
-        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java" />
         <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java" />
         <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AOP.java" />
+        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java" />
         <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/Processor.java" />
+        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/Node.java" />
+        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java" />
+        <option value="$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java" />
       </list>
     </option>
   </component>
@@ -187,6 +246,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -284,8 +345,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -295,6 +354,7 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://D:/Projecten/PWS/simulator/src/com/verictas/pos/simulator/Node.java" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -593,18 +653,17 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2653277" sideWeight="0.49375" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2653277" sideWeight="0.48541668" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30866808" sideWeight="0.42083332" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20084566" sideWeight="0.4328125" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30866808" sideWeight="0.57916665" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20084566" sideWeight="0.5671875" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17864583" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -616,6 +675,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.48125" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="1312" y="663" width="586" height="345" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -635,7 +695,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="36" />
+      <option name="time" value="46" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -644,13 +704,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/Vector3dMatrix.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2442">
-          <caret line="116" column="5" selection-start-line="116" selection-start-column="5" selection-end-line="116" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -664,6 +717,7 @@
           <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#Simulator#0" expanded="false" />
             <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
           </folding>
         </state>
@@ -682,6 +736,7 @@
           <caret line="55" column="39" selection-start-line="55" selection-start-column="39" selection-end-line="55" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#Simulator#0" expanded="false" />
             <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
           </folding>
         </state>
@@ -729,6 +784,7 @@
           <caret line="55" column="39" selection-start-line="55" selection-start-column="39" selection-end-line="55" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#Simulator#0" expanded="false" />
             <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
           </folding>
         </state>
@@ -776,6 +832,7 @@
           <caret line="55" column="39" selection-start-line="55" selection-start-column="39" selection-end-line="55" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#Simulator#0" expanded="false" />
             <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
           </folding>
         </state>
@@ -823,6 +880,7 @@
           <caret line="35" column="30" selection-start-line="35" selection-start-column="30" selection-end-line="35" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#Simulator#0" expanded="false" />
             <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
           </folding>
         </state>
@@ -954,17 +1012,94 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/ObjectStore.java">
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/ObjectStore.java" />
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/dataWriter/DataWriter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
+        <state relative-caret-position="577">
+          <caret line="145" column="35" selection-start-line="145" selection-start-column="35" selection-end-line="145" selection-end-column="35" />
+          <folding>
+            <element signature="method#write#0;class#DataWriter#0" expanded="false" />
+            <element signature="method#save#0;class#DataWriter#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AU.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="52" column="41" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="41" />
+          <folding>
+            <element signature="e#1368#1369#0" expanded="false" />
+            <element signature="e#1412#1413#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#run#0;class#Simulator#0" expanded="false" />
+            <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AOP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="52" selection-start-line="12" selection-start-column="52" selection-end-line="12" selection-end-column="52" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/Processor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="63" column="62" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="62" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#objectArrayToHashMap#0;class#Processor#0" expanded="false" />
+            <element signature="method#close#0;class#Processor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="39" column="94" selection-start-line="39" selection-start-column="94" selection-end-line="39" selection-end-column="94" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="34" column="27" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
+          <folding>
+            <element signature="e#287#288#0" expanded="true" />
+            <element signature="e#319#320#0" expanded="true" />
+            <element signature="e#394#395#0" expanded="true" />
+            <element signature="e#439#440#0" expanded="true" />
+            <element signature="method#empty#0;class#Node#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Object.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
+        <state relative-caret-position="1850">
           <caret line="146" column="7" selection-start-line="146" selection-start-column="7" selection-end-line="146" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -984,86 +1119,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/dataWriter/DataWriter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="145" column="35" selection-start-line="145" selection-start-column="35" selection-end-line="145" selection-end-column="35" />
-          <folding>
-            <element signature="method#write#0;class#DataWriter#0" expanded="false" />
-            <element signature="method#save#0;class#DataWriter#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AU.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="52" column="41" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="41" />
-          <folding>
-            <element signature="e#1368#1369#0" expanded="true" />
-            <element signature="e#1412#1413#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="39" column="94" selection-start-line="39" selection-start-column="94" selection-end-line="39" selection-end-column="94" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/SimulatorConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/mathUtils/AOP.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="52" selection-start-line="12" selection-start-column="52" selection-end-line="12" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/ObjectProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-479">
-          <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
+        <state relative-caret-position="286">
+          <caret line="109" column="72" selection-start-line="109" selection-start-column="72" selection-end-line="109" selection-end-column="72" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#processAphelionAndPerihelion#0;class#ObjectProcessor#0" expanded="false" />
-            <element signature="method#calculateTops#0;class#ObjectProcessor#0" expanded="false" />
-            <element signature="method#processNodes#0;class#ObjectProcessor#0" expanded="false" />
+            <element signature="e#1132#1133#0" expanded="true" />
+            <element signature="e#1172#1173#0" expanded="true" />
             <element signature="method#processRoundCheck#0;class#ObjectProcessor#0" expanded="false" />
-            <element signature="method#reset#0;class#ObjectProcessor#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/Simulator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3">
-          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#accelerate#0;class#Simulator#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/verictas/pos/simulator/processor/Processor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="102" column="64" selection-start-line="102" selection-start-column="64" selection-end-line="102" selection-end-column="64" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#objectArrayToHashMap#0;class#Processor#0" expanded="false" />
-            <element signature="method#close#0;class#Processor#0" expanded="false" />
+            <element signature="method#cleanHistory#0;class#ObjectProcessor#0" expanded="false" />
           </folding>
         </state>
       </provider>

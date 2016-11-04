@@ -1,6 +1,7 @@
 package com.verictas.pos.simulator.processor;
 
 import com.verictas.pos.simulator.Object;
+import com.verictas.pos.simulator.Simulator;
 import com.verictas.pos.simulator.SimulatorConfig;
 import com.verictas.pos.simulator.dataWriter.DataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
@@ -37,7 +38,7 @@ public class Processor {
         }
     }
 
-    public void process(Object[] objectArray, int rounds) throws ProcessingException, WritingException {
+    public void process(Object[] objectArray) throws ProcessingException, WritingException {
         HashMap<String, Object> objects = objectArrayToHashMap(objectArray);
 
         /**
@@ -48,7 +49,7 @@ public class Processor {
 
             object.setObjectData(objects.get(objectName));
             object.setReferenceObjectData(objects.get(SimulatorConfig.sunName));
-            object.processHistory(rounds);
+            object.processHistory();
 
             // Check if the object has gone round last round
 
@@ -58,9 +59,9 @@ public class Processor {
                 object.processNodes();
 
                 // ECHO:: Object has gone full circle last round!
-                System.out.println("\n\n============== ROTATION DATA: " + objectName.toUpperCase() + ", ROUND " + (rounds - 1) + " =============");
+                System.out.println("\n\n============== ROTATION DATA: " + objectName.toUpperCase() + ", ROUND " + (Simulator.round - 1) + " =============");
 
-                if (SimulatorConfig.outputUnit == "AU") {
+                if (SimulatorConfig.outputUnit.equals("AU")) {
                     System.out.println("Current position (AU): " + AU.convertFromMeter(objects.get(objectName).position) + "\n");
                     System.out.println("Highest point (z-axis graph) (AU): " + AU.convertFromMeter(object.absoluteMax));
                     System.out.println("Lowest point (z-axis graph) (AU): " + AU.convertFromMeter(object.absoluteMin));

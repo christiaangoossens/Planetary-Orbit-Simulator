@@ -7,6 +7,12 @@ import com.verictas.pos.simulator.processor.ProcessingException;
 import com.verictas.pos.simulator.processor.Processor;
 
 public class Simulator {
+    public static int round = 0; // Stores an global integer value with the current round (as a timestamp)
+
+    /**
+     * Run method for the Simulator
+     * @param objects
+     */
     public static void run(Object[] objects) {
 
         /**
@@ -44,11 +50,13 @@ public class Simulator {
              * Start the rounds loop
              */
             for(int t = 0; t != rounds; t++) {
+                // Set round
+                Simulator.round++;
+
                 /**
                  * The round has started
                  */
-                //System.out.println("\nRound " + (t + 1) + " started!");
-                System.out.println("Round " + (t + 1) + " started!");
+                System.out.println("Round " + (Simulator.round + 1) + " started!");
 
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updatePosition(time);
@@ -64,7 +72,7 @@ public class Simulator {
                 /**
                  * Do the processing on the objects
                  */
-                processor.process(objects, t + 1);
+                processor.process(objects);
 
                 /**
                  * The round has ended
@@ -83,13 +91,20 @@ public class Simulator {
             long stopTime = System.currentTimeMillis();
             System.out.println("Simulation took: " + (stopTime - startTime) + "ms");
         } catch(ProcessingException e) {
+            System.out.println("\nERROR:: Processing failed.");
             e.printStackTrace();
         } catch(WritingException e) {
+            System.out.println("\nERROR:: Writing to file failed.");
             e.printStackTrace();
         }
     }
 
-    public static void accelerate(Object[] objects, Vector3dMatrix matrix) {
+    /**
+     * Accelerates the given objects, puts the results in the given matrix and enacts forces
+     * @param objects
+     * @param matrix
+     */
+    private static void accelerate(Object[] objects, Vector3dMatrix matrix) {
         // Loop
         for(int i = 0; i < objects.length; i++) {
             /**
@@ -109,27 +124,20 @@ public class Simulator {
 
                 Vector3d force = objects[i].getForceOnObject(objects[o]);
                 matrix.setPosition(force, i, o);
-                //System.out.println("Force " + (i + 1) + " on " + (o + 1) + " - " + force);
 
                 /**
                  * Also put in the opposite force
                  */
                 force.scale(-1);
                 matrix.setPosition(force, o, i);
-                //System.out.println("Force " + (o + 1) + " on " + (i + 1) + " - " + force);
             }
         }
-
-
-        //System.out.println("\n");
-        //System.out.println(matrix);
 
         for(int i = 0; i < objects.length; i++) {
             /**
              * Progress forces on the object
              */
             Vector3d forceOnI = matrix.getColumnTotal(i);
-            //System.out.println("All forces on " + (i + 1) + " - " + forceOnI);
             objects[i].enactForceOnObject(forceOnI);
         }
     }

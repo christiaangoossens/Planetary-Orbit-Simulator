@@ -1,13 +1,18 @@
 package com.verictas.pos.simulator.processor;
 
+import com.verictas.pos.simulator.Node;
 import com.verictas.pos.simulator.Object;
+import com.verictas.pos.simulator.Simulator;
+import com.verictas.pos.simulator.SimulatorConfig;
+
 import javax.vecmath.Vector3d;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ObjectProcessor {
-    public Vector3d aphelion;
-    public Vector3d perihelion;
+    public Node aphelion;
+    public Node perihelion;
     public double aphelionDistance = -1;
     public double perihelionDistance = -1;
 
@@ -18,11 +23,14 @@ public class ObjectProcessor {
     public double lastStartDistance = -1;
     public double beforeLastStartDistance = -1;
 
-    public Vector3d ascendingNode;
-    public Vector3d descendingNode;
+    public Node ascendingNode;
+    public Node descendingNode;
 
-    public Vector3d absoluteMax;
-    public Vector3d absoluteMin;
+    public Node absoluteMax;
+    public Node absoluteMin;
+
+    public Node carryOverNode;
+    public int carryOverBit;
 
     public double referenceZ;
 
@@ -44,8 +52,8 @@ public class ObjectProcessor {
      * Keep an history of the object position and speed (for logging and further processing)
      */
 
-    public void processHistory(int round) {
-        this.history.put(round, new Vector3d[] {this.thisObject.position, this.thisObject.speed});
+    public void processHistory() {
+        this.history.put(Simulator.round, new Vector3d[] {this.thisObject.position, this.thisObject.speed});
     }
 
     /**
@@ -71,12 +79,14 @@ public class ObjectProcessor {
          */
 
         if (sunDistance > aphelionDistance) {
-            this.aphelion = this.thisObject.position;
+            this.aphelion = new Node(this.thisObject.position);
+            this.aphelion.setRound(Simulator.round);
             this.aphelionDistance = sunDistance;
         }
 
         if (sunDistance < perihelionDistance) {
-            this.perihelion = this.thisObject.position;
+            this.perihelion = new Node(this.thisObject.position);
+            this.perihelion.setRound(Simulator.round);
             this.perihelionDistance = sunDistance;
         }
     }
@@ -87,20 +97,36 @@ public class ObjectProcessor {
      */
 
     public void calculateTops() {
-        if (this.absoluteMax == null) {
-            this.absoluteMax = this.thisObject.position;
+        if (this.absoluteMax == null || this.absoluteMax.empty()) {
+            this.absoluteMax = new Node(this.thisObject.position);
+            this.absoluteMax.setRound(Simulator.round);
         }
 
-        if (this.absoluteMin == null) {
-            this.absoluteMin = this.thisObject.position;
+        if (this.absoluteMin == null || this.absoluteMin.empty()) {
+            this.absoluteMin = new Node(this.thisObject.position);
+            this.absoluteMin.setRound(Simulator.round);
         }
 
         if (this.thisObject.position.getZ() > this.absoluteMax.getZ()) {
-            this.absoluteMax = this.thisObject.position;
+            /**
+             * If the next maximum is more than 50 timesteps removed from the last, we've a problem
+             */
+            if (Simulator.round > this.absoluteMax.round + (SimulatorConfig.time * 500)) {
+                System.out.println("ERROR: I already have a maximum (" + this.absoluteMax + "), but a new one (" + this.thisObject.position + ") has presented itself.");
+            }
+            this.absoluteMax = new Node(this.thisObject.position);
+            this.absoluteMax.setRound(Simulator.round);
         }
 
         if (this.thisObject.position.getZ() < this.absoluteMin.getZ()) {
-            this.absoluteMin = this.thisObject.position;
+            /**
+             * If the next minimum is more than 50 timesteps removed from the last, we've a problem
+             */
+            if (Simulator.round > this.absoluteMin.round + (SimulatorConfig.time * 500)) {
+                System.out.println("ERROR: I already have a minimum (" + this.absoluteMin + "), but a new one (" + this.thisObject.position + ") has presented itself.");
+            }
+            this.absoluteMin = new Node(this.thisObject.position);
+            this.absoluteMin.setRound(Simulator.round);
         }
     }
     /**
@@ -108,39 +134,112 @@ public class ObjectProcessor {
      */
 
     public void processNodes() {
-        this.referenceZ = (this.absoluteMin.getZ() + this.absoluteMax.getZ()) / 2;
+        /**
+         * Determine how the starting positions are
+         */
 
-        // Loop through the entire history
+        /**
+         * Carry out carry over checking
+         */
+
+        if (this.carryOverNode != null) {
+            // There is a node present in memory from last round. We should check what the carryOverBit is, to see if it's a maximum or a minimum
+            if (this.carryOverBit == 1) {
+                // Last rounds node is a maximum, we're searching for a descending node
+                Node result = this.findNode(this.absoluteMin, this.carryOverNode);
+
+                if (!result.empty()) {
+                    System.out.println("INFO:: Found descending node in round " + result.round + "\n");
+                    this.descendingNode = result;
+                }
+            } else {
+                // Last rounds node is a minimum, we're searching for an ascending node
+                Node result = this.findNode(this.carryOverNode, this.absoluteMax);
+
+                if (!result.empty()) {
+                    System.out.println("INFO:: Found ascending node in round " + result.round + "\n");
+                    this.ascendingNode = result;
+                }
+            }
+
+            // Cleaning up
+            this.carryOverNode = null;
+            this.carryOverBit = -1;
+        }
+
+        /**
+         * Carry out the normal checking
+         */
+
+        double minRound = this.absoluteMin.round;
+        double maxRound = this.absoluteMax.round;
+
+        if (minRound < maxRound) {
+            // The minimum came before the maximum node, we're expecting to find the ascending node between the two
+            // The maximum node should remain in memory to find the descending node next round
+
+            Node result = this.findNode(this.absoluteMin, this.absoluteMax);
+
+            if (!result.empty()) {
+                System.out.println("INFO:: Found ascending node in round " + result.round + "\n");
+                this.ascendingNode = result;
+            }
+
+            this.carryOverNode = this.absoluteMax;
+            this.carryOverBit = 1;
+            this.cleanHistory(this.absoluteMax.round);
+        } else {
+            // The maximum came before the minimum node, we're expecting to find the descending node between the two
+            // The minimum node should remain in memory to find the ascending node next round
+
+            Node result = this.findNode(this.absoluteMin, this.absoluteMax);
+
+            if (!result.empty()) {
+                System.out.println("INFO:: Found descending node in round " + result.round + "\n");
+                this.descendingNode = result;
+            }
+
+            this.carryOverNode = this.absoluteMin;
+            this.carryOverBit = 0;
+            this.cleanHistory(this.absoluteMin.round);
+        }
+
+    }
+
+    private Node findNode(Node min, Node max) {
+        this.referenceZ = (min.getZ() + max.getZ()) / 2;
+        System.out.println("INFO:: Called node finder with min: " + min + " (round " + min.round + ") and max: " + max + " (round " + max.round + ") and a reference height of " + referenceZ);
+        Node returnNode = new Node();
+
         for (Map.Entry<Integer, Vector3d[]> entry : this.history.entrySet()) {
             Integer round = entry.getKey();
             Vector3d[] vectorArray = entry.getValue();
 
-            if (this.history.get(round + 1) != null) {
-                // There is a next key!
+            boolean roundCheck;
+
+            if (min.round < max.round) {
+                roundCheck = min.round < round && round < max.round;
+            } else {
+                roundCheck = max.round < round && round < min.round;
+            }
+
+            if ((this.history.get(round + 1) != null) && roundCheck) {
+                // There is a next key and this key is within logical bounds
+
                 if (vectorArray[0].getZ() < referenceZ && this.history.get(round + 1)[0].getZ() > referenceZ) {
-                    // This point is below the reference height and the next is above. This point is the ascending node (with positive z)
-                    if (referenceZ <= 0) {
-                        // Descending
-                        this.descendingNode = vectorArray[0];
-                        System.out.println("INFO:: Found a descending node at round " + round + " at position: " + vectorArray[0]);
-                    } else {
-                        // Ascending
-                        this.ascendingNode = vectorArray[0];
-                        System.out.println("INFO:: Found a ascending node at round " + round + " at position: " + vectorArray[0]);
-                    }
+                    returnNode = new Node(vectorArray[0]);
+                    returnNode.setRound(round);
                 } else if (vectorArray[0].getZ() > referenceZ && this.history.get(round + 1)[0].getZ() < referenceZ) {
-                    // This point is above the reference height and the next is below. This point is the descending node (with positive z)
-                    if (referenceZ <= 0) {
-                        // Ascending
-                        this.ascendingNode = vectorArray[0];
-                        System.out.println("INFO:: Found a ascending node at round " + round + " at position: " + vectorArray[0]);
-                    } else {
-                        // Descending
-                        this.descendingNode = vectorArray[0];
-                        System.out.println("INFO:: Found a descending node at round " + round + " at position: " + vectorArray[0]);
-                    }
+                    returnNode = new Node(vectorArray[0]);
+                    returnNode.setRound(round);
                 }
             }
+        }
+
+        if (!returnNode.empty()) {
+            return returnNode;
+        } else {
+            return new Node();
         }
     }
 
@@ -194,13 +293,25 @@ public class ObjectProcessor {
         perihelionDistance = -1;
         lastStartDistance = -1;
         beforeLastStartDistance = -1;
-        aphelion = null;
-        perihelion = null;
-        ascendingNode = null;
-        descendingNode = null;
-        history = new HashMap<>();
-        absoluteMax = null;
-        absoluteMin = null;
+        aphelion = new Node();
+        perihelion = new Node();
+        ascendingNode = new Node();
+        descendingNode = new Node();
+        absoluteMax = new Node();
+        absoluteMin = new Node();
         referenceZ = -1;
+    }
+
+    /**
+     * Clears all entries from history before the given key
+     * @param key
+     */
+    public void cleanHistory(int key) {
+        for(Iterator<Map.Entry<Integer, Vector3d[]>> it = this.history.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, Vector3d[]> entry = it.next();
+            if(entry.getKey() < key) {
+                it.remove();
+            }
+        }
     }
 }
