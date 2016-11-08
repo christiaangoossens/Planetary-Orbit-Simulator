@@ -56,7 +56,11 @@ public class Simulator {
                 /**
                  * The round has started
                  */
-                System.out.println("Round " + (Simulator.round + 1) + " started!");
+                if(SimulatorConfig.logConsole) {
+                    if(SimulatorConfig.skipConsole == -1 || Simulator.round % SimulatorConfig.skipConsole == 0 || Simulator.round == 1) {
+                        System.out.println("Round " + Simulator.round + " started!");
+                    }
+                }
 
                 for(int i = 0; i < objects.length; i++) {
                     objects[i].updatePosition(time);

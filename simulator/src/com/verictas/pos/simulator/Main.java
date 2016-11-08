@@ -41,6 +41,7 @@ public class Main {
         Object jupiter = new Object("Jupiter", 1898.13E24, AU.convertToMeter(new Vector3d(-5.172279968303672E+00,1.591564562098799E+00,1.090553487095606E-01)), AU.convertToMetersPerSecond(new Vector3d(-2.306423668033420E-03,-6.856869314900905E-03,8.012916249248967E-05)));
         Object saturn = new Object("Saturn", 5.68319E26, AU.convertToMeter(new Vector3d(-3.710637850378867E+00,-9.289569433157130E+00,3.091990731378936E-01)), AU.convertToMetersPerSecond(new Vector3d(4.874750391005278E-03,-2.086615906689840E-03,-1.574898601194673E-04)));
         Object venus = new Object("Venus", 48.685E23, AU.convertToMeter(new Vector3d(-7.130901319004951E-01,-5.719763212192740E-02,4.040076577877051E-02)), AU.convertToMetersPerSecond(new Vector3d(1.525993024372452E-03,-2.024175581604569E-02,-3.656582385749146E-04)));
+        Object mars = new Object("Mars", 6.4185E23, AU.convertToMeter(new Vector3d(-1.644664047074283E+00,1.714211195991345E-01,4.385749324150048E-02)), AU.convertFromMetersPerSecond(new Vector3d(-9.128062787682906E-04, -1.271783289037382E-02, -2.442517367300464E-04)));
 
         /**
          * Object listing

@@ -10,10 +10,10 @@ public class AOP {
         Vector3d eccentricity = new Vector3d(0,0,0);
         eccentricity.sub(perihelion, aphelion);
 
-        if (perihelion.getY() > ascendingNode.getY()) {
-            return ascendingNode.angle(eccentricity);
-        } else {
+        if (eccentricity.getZ() < 0) {
             return (2 * Math.PI) - ascendingNode.angle(eccentricity);
+        } else {
+            return ascendingNode.angle(eccentricity);
         }
     }
 }

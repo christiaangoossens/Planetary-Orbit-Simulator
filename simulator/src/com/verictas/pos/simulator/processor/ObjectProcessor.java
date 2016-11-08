@@ -16,12 +16,12 @@ public class ObjectProcessor {
     public double aphelionDistance = -1;
     public double perihelionDistance = -1;
 
-    public Object thisObject;
-    public Object referenceObject;
+    private Object thisObject;
+    private Object referenceObject;
 
-    public Vector3d startingPosition;
-    public double lastStartDistance = -1;
-    public double beforeLastStartDistance = -1;
+    private Vector3d startingPosition;
+    private double lastStartDistance = -1;
+    private double beforeLastStartDistance = -1;
 
     public Node ascendingNode;
     public Node descendingNode;
@@ -29,12 +29,17 @@ public class ObjectProcessor {
     public Node absoluteMax;
     public Node absoluteMin;
 
-    public Node carryOverNode;
-    public int carryOverBit;
+    private Node carryOverNode;
+    private int carryOverBit;
 
     public double referenceZ;
 
-    public HashMap<Integer, Vector3d[]> history = new HashMap<>();
+    private HashMap<Integer, Vector3d[]> history = new HashMap<>();
+
+    private double lastMaxRound = -1;
+    private double lastMinRound = -1;
+
+    private boolean skipNodes = false;
 
     public void setStartingPosition(Vector3d position) {
         this.startingPosition = position;
@@ -108,23 +113,11 @@ public class ObjectProcessor {
         }
 
         if (this.thisObject.position.getZ() > this.absoluteMax.getZ()) {
-            /**
-             * If the next maximum is more than 50 timesteps removed from the last, we've a problem
-             */
-            if (Simulator.round > this.absoluteMax.round + (SimulatorConfig.time * 500)) {
-                System.out.println("ERROR: I already have a maximum (" + this.absoluteMax + "), but a new one (" + this.thisObject.position + ") has presented itself.");
-            }
             this.absoluteMax = new Node(this.thisObject.position);
             this.absoluteMax.setRound(Simulator.round);
         }
 
         if (this.thisObject.position.getZ() < this.absoluteMin.getZ()) {
-            /**
-             * If the next minimum is more than 50 timesteps removed from the last, we've a problem
-             */
-            if (Simulator.round > this.absoluteMin.round + (SimulatorConfig.time * 500)) {
-                System.out.println("ERROR: I already have a minimum (" + this.absoluteMin + "), but a new one (" + this.thisObject.position + ") has presented itself.");
-            }
             this.absoluteMin = new Node(this.thisObject.position);
             this.absoluteMin.setRound(Simulator.round);
         }
@@ -149,7 +142,9 @@ public class ObjectProcessor {
                 Node result = this.findNode(this.absoluteMin, this.carryOverNode);
 
                 if (!result.empty()) {
-                    System.out.println("INFO:: Found descending node in round " + result.round + "\n");
+                    if (SimulatorConfig.logConsole) {
+                        System.out.println("INFO:: Found descending node in round " + result.round + "\n");
+                    }
                     this.descendingNode = result;
                 }
             } else {
@@ -157,7 +152,9 @@ public class ObjectProcessor {
                 Node result = this.findNode(this.carryOverNode, this.absoluteMax);
 
                 if (!result.empty()) {
-                    System.out.println("INFO:: Found ascending node in round " + result.round + "\n");
+                    if (SimulatorConfig.logConsole) {
+                        System.out.println("INFO:: Found ascending node in round " + result.round + "\n");
+                    }
                     this.ascendingNode = result;
                 }
             }
@@ -181,7 +178,9 @@ public class ObjectProcessor {
             Node result = this.findNode(this.absoluteMin, this.absoluteMax);
 
             if (!result.empty()) {
-                System.out.println("INFO:: Found ascending node in round " + result.round + "\n");
+                if (SimulatorConfig.logConsole) {
+                    System.out.println("INFO:: Found ascending node in round " + result.round + "\n");
+                }
                 this.ascendingNode = result;
             }
 
@@ -195,7 +194,9 @@ public class ObjectProcessor {
             Node result = this.findNode(this.absoluteMin, this.absoluteMax);
 
             if (!result.empty()) {
-                System.out.println("INFO:: Found descending node in round " + result.round + "\n");
+                if (SimulatorConfig.logConsole) {
+                    System.out.println("INFO:: Found descending node in round " + result.round + "\n");
+                }
                 this.descendingNode = result;
             }
 
@@ -208,8 +209,30 @@ public class ObjectProcessor {
 
     private Node findNode(Node min, Node max) {
         this.referenceZ = (min.getZ() + max.getZ()) / 2;
-        System.out.println("INFO:: Called node finder with min: " + min + " (round " + min.round + ") and max: " + max + " (round " + max.round + ") and a reference height of " + referenceZ);
+
+        if (SimulatorConfig.logConsole) {
+            System.out.println("INFO:: Called node finder with min: " + min + " (round " + min.round + ") and max: " + max + " (round " + max.round + ") and a reference height of " + referenceZ);
+        }
+
         Node returnNode = new Node();
+
+        if (lastMaxRound == -1 || lastMaxRound == -1) {
+            lastMinRound = min.round;
+            lastMaxRound = max.round;
+        } else {
+            // You should compare these values to check.
+            if (lastMaxRound < min.round && max.round < min.round && min.round == lastMinRound) {
+                // max2 > max1 > (min1 = min2)
+                System.out.println("WARNING:: This round's values for the nodes shouldn't be trusted. They are calculated incorrectly.");
+                this.skipNodes = true;
+            }
+
+            if (lastMinRound < max.round && min.round < max.round && max.round == lastMaxRound) {
+                // (max1 = max2) > min1 > min2
+                System.out.println("WARNING:: This round's values for the nodes shouldn't be trusted. They are calculated incorrectly.");
+                this.skipNodes = true;
+            }
+        }
 
         for (Map.Entry<Integer, Vector3d[]> entry : this.history.entrySet()) {
             Integer round = entry.getKey();
@@ -243,6 +266,10 @@ public class ObjectProcessor {
         }
     }
 
+    public boolean checkNodes() {
+        return !this.skipNodes;
+    }
+
     /**
      * Processes the round check
      */
@@ -259,7 +286,9 @@ public class ObjectProcessor {
             if (beforeLastStartDistance > lastStartDistance && startDistance > lastStartDistance) {
                 // Last point was the closest to the starting position overall!
                 fullRotation = true;
-                System.out.println("INFO:: Object " + this.thisObject.name + " has made a full rotation last round.");
+                if (SimulatorConfig.logConsole) {
+                    System.out.println("INFO:: Object " + this.thisObject.name + " has made a full rotation last round.");
+                }
             }
 
             beforeLastStartDistance = lastStartDistance;
@@ -300,6 +329,9 @@ public class ObjectProcessor {
         absoluteMax = new Node();
         absoluteMin = new Node();
         referenceZ = -1;
+        lastMaxRound = -1;
+        lastMinRound = -1;
+        skipNodes = false;
     }
 
     /**
