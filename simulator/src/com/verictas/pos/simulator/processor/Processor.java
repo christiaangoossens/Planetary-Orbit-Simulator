@@ -15,8 +15,7 @@ public class Processor {
     private DataWriter writer;
     public HashMap<String, Object> initialObjectValues = new HashMap<>();
     public HashMap<String, ObjectProcessor> objects = new HashMap<>();
-
-    public ArrayList<Double> arguments = new ArrayList<>();
+    public HashMap<String, ArrayList<Double>> arguments = new HashMap<>();
 
     public Processor(Object[] objects) throws ProcessingException, WritingException {
         /**
@@ -83,9 +82,9 @@ public class Processor {
                     }
 
                     //System.out.println("Position during apastron (AU): " + AU.convertFromMeter(object.aphelion));
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000 + "\n");
+                    //System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000 + "\n");
                     //System.out.println("Position during periastron (AU): " + AU.convertFromMeter(object.perihelion));
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
+                    //System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
                 } else {
                     //System.out.println("Current position (m): " + objects.get(objectName).position + "\n");
                    //System.out.println("Highest point (z-axis graph) (m): " + object.absoluteMax);
@@ -105,17 +104,24 @@ public class Processor {
                     }
 
                     //System.out.println("Position during apastron (m): " + object.aphelion);
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000 + "\n");
+                    ///System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000);
                     //System.out.println("Position during periastron (m): " + object.perihelion);
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
+                    //System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
                 }
 
                 if (object.ascendingNode != null) {
                     System.out.println("Argument of periapsis (radians): " + AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion));
-                    System.out.println("Argument of periapsis (degrees): " + Math.toDegrees(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion)));
+                    //System.out.println("Argument of periapsis (degrees): " + Math.toDegrees(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion)));
 
                     if (object.checkNodes()) {
-                        arguments.add(Math.toDegrees(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion)));
+                        // Add the node to the list
+                        if (arguments.get(objectName) == null) {
+                            // If not defined
+                            ArrayList<Double> agmnts = new ArrayList<>();
+                            arguments.put(objectName, agmnts);
+                        }
+
+                        arguments.get(objectName).add(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion));
                     }
 
                 } else {
@@ -166,18 +172,30 @@ public class Processor {
     public void close() throws ProcessingException {
         try {
             this.writer.save();
+
             System.out.println("RESULTS: " + arguments);
 
-            // CALCULATE AVERAGE
+            for(String objectName : SimulatorConfig.objectNames) {
+                ArrayList<Double> arguments = this.arguments.get(objectName);
+                double score = 0;
 
-            double sum = 0;
-            for (int i = 0; i < arguments.size(); i++){
-                sum = sum + arguments.get(i);
+                // Calculate score
+                for(int i = 1; i < arguments.size() - 1; i++) {
+                    score = score + Math.abs(arguments.get(i-1) - arguments.get(i));
+                }
+
+                System.out.println("SCORE: " + score);
+
+                // CALCULATE AVERAGE
+                double sum = 0;
+                for (int i = 0; i < arguments.size(); i++){
+                    sum = sum + arguments.get(i);
+                }
+                // calculate average
+                double average = sum / arguments.size();
+
+                System.out.println("AVERAGE (degrees): " + Math.toDegrees(average));
             }
-            // calculate average
-            double average = sum / arguments.size();
-
-            System.out.println("AVERAGE: " + average);
         } catch(WritingException e) {
             throw new ProcessingException("An error occurred during creation of the file writer: " + e.toString());
         }
