@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class Processor {
     private DataWriter writer;
     public HashMap<String, Object> initialObjectValues = new HashMap<>();
-    public HashMap<String, ObjectProcessor> objects = new HashMap<>();
+    public HashMap<String, SimpleObjectProcessor> objects = new HashMap<>();
     public HashMap<String, ArrayList<Double>> arguments = new HashMap<>();
 
     public Processor(Object[] objects) throws ProcessingException, WritingException {
@@ -35,8 +35,7 @@ public class Processor {
          * Create the object processing array
          */
         for (Object object : initialObjectValues.values()) {
-            this.objects.put(object.name, new ObjectProcessor());
-            this.objects.get(object.name).setStartingPosition(object.position);
+            this.objects.put(object.name, new SimpleObjectProcessor());
         }
     }
 
@@ -47,16 +46,16 @@ public class Processor {
          * Only do the processing for the asked planet(s)
          */
         for(String objectName : SimulatorConfig.objectNames) {
-            ObjectProcessor object = this.objects.get(objectName);
-
+            SimpleObjectProcessor object = this.objects.get(objectName);
             object.setObjectData(objects.get(objectName));
-            object.setReferenceObjectData(objects.get(SimulatorConfig.sunName));
-            object.processHistory();
+            object.calculateAOP();
+            //object.setReferenceObjectData(objects.get(SimulatorConfig.sunName));
+            //object.processHistory();
 
             // Check if the object has gone round last round
 
-            boolean round = object.processRoundCheck();
-            if (round) {
+            //boolean round = object.processRoundCheck();
+            /*if (round) {
                 // Process the nodes
                 object.processNodes();
 
@@ -134,11 +133,11 @@ public class Processor {
 
                 // Reset starting position
                 this.objects.get(objectName).setStartingPosition(objects.get(objectName).position);
-            }
+            }*/
 
             // Process values for this round
-            object.processAphelionAndPerihelion();
-            object.calculateTops();
+            //object.processAphelionAndPerihelion();
+            //object.calculateTops();
 
             this.objects.put(objectName, object);
         }
