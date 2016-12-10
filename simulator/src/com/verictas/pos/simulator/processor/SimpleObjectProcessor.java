@@ -10,7 +10,7 @@ public class SimpleObjectProcessor {
         this.thisObject = object;
     }
 
-    public void calculateAOP() {
+    public double calculateAOP() {
         // ORBITAL MOMENTUM VECTOR
         Vector3d orbitalMomentum = new Vector3d(0,0,0);
         Object object = this.thisObject;
@@ -44,6 +44,6 @@ public class SimpleObjectProcessor {
             aop = ascendingNode.angle(eccentricity);
         }
 
-        System.out.println("Orbital momentum vector: " + orbitalMomentum + " & accending node: " + ascendingNode + " & eccentricity vector: " + eccentricity + " & aop: " + Math.toDegrees(aop));
+        return aop;
     }
 }

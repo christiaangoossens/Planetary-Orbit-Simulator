@@ -48,96 +48,17 @@ public class Processor {
         for(String objectName : SimulatorConfig.objectNames) {
             SimpleObjectProcessor object = this.objects.get(objectName);
             object.setObjectData(objects.get(objectName));
-            object.calculateAOP();
-            //object.setReferenceObjectData(objects.get(SimulatorConfig.sunName));
-            //object.processHistory();
 
-            // Check if the object has gone round last round
-
-            //boolean round = object.processRoundCheck();
-            /*if (round) {
-                // Process the nodes
-                object.processNodes();
-
-                // ECHO:: Object has gone full circle last round!
-                System.out.println("\n\n============== ROTATION DATA: " + objectName.toUpperCase() + ", ROUND " + (Simulator.round - 1) + " =============");
-
-                if (SimulatorConfig.outputUnit.equals("AU")) {
-                    //System.out.println("Current position (AU): " + AU.convertFromMeter(objects.get(objectName).position) + "\n");
-                    //System.out.println("Highest point (z-axis graph) (AU): " + AU.convertFromMeter(object.absoluteMax));
-                    //System.out.println("Lowest point (z-axis graph) (AU): " + AU.convertFromMeter(object.absoluteMin));
-                    //System.out.println("Calculated reference height (AU) : " + AU.convertFromMeter(object.referenceZ) + "\n");
-
-                    if (object.ascendingNode != null) {
-                        System.out.println("Ascending node (AU): " + AU.convertFromMeter(object.ascendingNode));
-                    } else {
-                        System.out.println("WARNING:: Ascending node not found.");
-                    }
-
-                    if (object.descendingNode != null) {
-                        System.out.println("Descending node (AU): " + AU.convertFromMeter(object.descendingNode) + "\n");
-                    } else {
-                        System.out.println("WARNING:: Descending node not found.\n");
-                    }
-
-                    //System.out.println("Position during apastron (AU): " + AU.convertFromMeter(object.aphelion));
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000 + "\n");
-                    //System.out.println("Position during periastron (AU): " + AU.convertFromMeter(object.perihelion));
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
-                } else {
-                    //System.out.println("Current position (m): " + objects.get(objectName).position + "\n");
-                   //System.out.println("Highest point (z-axis graph) (m): " + object.absoluteMax);
-                    //System.out.println("Lowest point (z-axis graph) (m): " + object.absoluteMin);
-                    //System.out.println("Calculated reference height (m) : " + object.referenceZ + "\n");
-
-                    if (object.ascendingNode != null) {
-                        System.out.println("Ascending node (m): " + object.ascendingNode);
-                    } else {
-                        System.out.println("WARNING:: Ascending node not found.");
-                    }
-
-                    if (object.descendingNode != null) {
-                        System.out.println("Descending node (m): " + object.descendingNode + "\n");
-                    } else {
-                        System.out.println("WARNING:: Descending node not found.\n");
-                    }
-
-                    //System.out.println("Position during apastron (m): " + object.aphelion);
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000);
-                    //System.out.println("Position during periastron (m): " + object.perihelion);
-                    System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000 + "\n");
+            // Check if we need to calculate the AOP
+            if (Simulator.round % SimulatorConfig.moduloArgument == 0) {
+                if (arguments.get(objectName) == null) {
+                    // If not defined
+                    ArrayList<Double> agmnts = new ArrayList<>();
+                    arguments.put(objectName, agmnts);
                 }
 
-                if (object.ascendingNode != null) {
-                    System.out.println("Argument of periapsis (radians): " + AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion));
-                    //System.out.println("Argument of periapsis (degrees): " + Math.toDegrees(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion)));
-
-                    if (object.checkNodes()) {
-                        // Add the node to the list
-                        if (arguments.get(objectName) == null) {
-                            // If not defined
-                            ArrayList<Double> agmnts = new ArrayList<>();
-                            arguments.put(objectName, agmnts);
-                        }
-
-                        arguments.get(objectName).add(AOP.calculate(object.ascendingNode, object.perihelion, object.aphelion));
-                    }
-
-                } else {
-                    System.out.println("ERROR:: Can't calculate the argument of periapsis because the ascending node is missing.");
-                }
-
-                System.out.println("=======================================================================================\n\n");
-
-                object.reset();
-
-                // Reset starting position
-                this.objects.get(objectName).setStartingPosition(objects.get(objectName).position);
-            }*/
-
-            // Process values for this round
-            //object.processAphelionAndPerihelion();
-            //object.calculateTops();
+                arguments.get(objectName).add(object.calculateAOP());
+            }
 
             this.objects.put(objectName, object);
         }

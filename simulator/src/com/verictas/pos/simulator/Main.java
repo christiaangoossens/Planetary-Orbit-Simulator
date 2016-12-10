@@ -59,7 +59,7 @@ public class Main {
          * Object listing
          */
 
-        Object[] objects = {sun, earth, moon, jupiter};
+        Object[] objects = {sun, jupiter, saturn, neptune, uranus, object1};
 
 
         /**
