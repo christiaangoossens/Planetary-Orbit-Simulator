@@ -1,17 +1,5 @@
 package com.verictas.pos.simulator.dataWriter;
 
-import com.verictas.pos.simulator.Object;
-import com.verictas.pos.simulator.Simulator;
-import com.verictas.pos.simulator.SimulatorConfig;
-import com.verictas.pos.simulator.mathUtils.AU;
-import com.verictas.pos.simulator.processor.ObjectProcessor;
-
-import javax.vecmath.Vector3d;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.*;
 import java.util.*;
 
 public class AOPDataWriter extends DataWriter {

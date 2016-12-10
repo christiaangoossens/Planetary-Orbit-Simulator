@@ -4,14 +4,9 @@ import com.verictas.pos.simulator.Object;
 import com.verictas.pos.simulator.Simulator;
 import com.verictas.pos.simulator.SimulatorConfig;
 import com.verictas.pos.simulator.dataWriter.AOPDataWriter;
-import com.verictas.pos.simulator.dataWriter.DataWriter;
 import com.verictas.pos.simulator.dataWriter.PosDataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
-import com.verictas.pos.simulator.mathUtils.AOP;
-import com.verictas.pos.simulator.mathUtils.AU;
 
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
