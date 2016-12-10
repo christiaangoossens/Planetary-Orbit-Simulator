@@ -6,7 +6,9 @@ import com.verictas.pos.simulator.SimulatorConfig;
 import com.verictas.pos.simulator.dataWriter.AOPDataWriter;
 import com.verictas.pos.simulator.dataWriter.PosDataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
+import com.verictas.pos.simulator.mathUtils.AOP;
 
+import javax.vecmath.Vector3d;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -14,7 +16,6 @@ public class Processor {
     private PosDataWriter writer;
     private AOPDataWriter aopWriter;
     public HashMap<String, Object> initialObjectValues = new HashMap<>();
-    public HashMap<String, SimpleObjectProcessor> objects = new HashMap<>();
     public HashMap<String, TreeMap<Integer, Double>> arguments = new HashMap<>();
 
     public Processor(Object[] objects) throws ProcessingException, WritingException {
@@ -30,26 +31,18 @@ public class Processor {
         this.initialObjectValues = objectArrayToHashMap(objects);
 
         // Write initial values to file
-        this.write(initialObjectValues);
-
-        /**
-         * Create the object processing array
-         */
-        for (Object object : initialObjectValues.values()) {
-            this.objects.put(object.name, new SimpleObjectProcessor());
-        }
+        this.writePos(initialObjectValues);
     }
 
     public void process(Object[] objectArray) throws ProcessingException, WritingException {
         HashMap<String, Object> objects = objectArrayToHashMap(objectArray);
+        this.writePos(objects);
+
 
         /**
-         * Only do the processing for the asked planet(s)
+         * Calculate AOP for specified objects
          */
         for(String objectName : SimulatorConfig.objectNames) {
-            SimpleObjectProcessor object = this.objects.get(objectName);
-            object.setObjectData(objects.get(objectName));
-
             // Check if we need to calculate the AOP
             if (Simulator.round % SimulatorConfig.moduloArgument == 0) {
                 if (arguments.get(objectName) == null) {
@@ -57,16 +50,17 @@ public class Processor {
                     TreeMap<Integer, Double> agmnts = new TreeMap<>();
                     arguments.put(objectName, agmnts);
                 }
-                arguments.get(objectName).put(Simulator.round, object.calculateAOP());
+
+                // Calculate AOP and put it in the array
+                Object object = objects.get(objectName);
+                Vector3d pos = new Vector3d(object.position);
+                Vector3d speed = new Vector3d(object.speed);
+                arguments.get(objectName).put(Simulator.round, AOP.calculate(pos, speed));
             }
-
-            this.objects.put(objectName, object);
         }
-
-        this.write(objects);
     }
 
-    private void write(HashMap<String, Object> objects) throws ProcessingException, WritingException {
+    private void writePos(HashMap<String, Object> objects) throws ProcessingException, WritingException {
         if (SimulatorConfig.skipUnnecessary) {
             for (String name : SimulatorConfig.objectNames) {
                 this.writer.write(objects.get(name));
@@ -93,10 +87,6 @@ public class Processor {
         try {
             this.writer.save();
             System.out.println("");
-
-            System.out.println("TOTAL RESULTS: " + arguments);
-            System.out.println("");
-
             for(String objectName : SimulatorConfig.objectNames) {
                 TreeMap<Integer, Double> arguments = this.arguments.get(objectName);
 

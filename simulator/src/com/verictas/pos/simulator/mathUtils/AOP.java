@@ -1,36 +1,25 @@
-package com.verictas.pos.simulator.processor;
-
-import com.verictas.pos.simulator.Object;
-
+package com.verictas.pos.simulator.mathUtils;
 import javax.vecmath.Vector3d;
 
-public class SimpleObjectProcessor {
-    private Object thisObject;
-    public void setObjectData(Object object) {
-        this.thisObject = object;
-    }
-
-    public double calculateAOP() {
+public class AOP {
+    public static double calculate(Vector3d pos, Vector3d speed) {
         // ORBITAL MOMENTUM VECTOR
         Vector3d orbitalMomentum = new Vector3d(0,0,0);
-        Object object = this.thisObject;
-
-        orbitalMomentum.cross(object.speed, object.position);
+        orbitalMomentum.cross(speed, pos);
 
         // ACCENDING NODE VECTOR
         Vector3d ascendingNode = new Vector3d(0,0,0);
         ascendingNode.cross(new Vector3d(0,0,1), orbitalMomentum);
 
-
         // ECCENTRICITY VECTOR
         double mu = 1.32712440018E20;
 
         Vector3d upCross = new Vector3d(0,0,0);
-        upCross.cross(object.speed, orbitalMomentum);
+        upCross.cross(speed, orbitalMomentum);
         upCross.scale(1/mu);
 
-        double posLength = object.position.length();
-        Vector3d rightPos = object.position;
+        double posLength = pos.length();
+        Vector3d rightPos = pos;
         rightPos.scale(1/posLength);
 
         Vector3d eccentricity = new Vector3d(0,0,0);

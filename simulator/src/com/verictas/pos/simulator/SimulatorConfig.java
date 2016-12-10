@@ -5,15 +5,14 @@ public class SimulatorConfig {
      * Time settings
      */
 
-    public static int rounds = 3000000; // Amount of rounds to run the simulator for // 3000000 = 250.000 jaar
-    public static double time = 259200; // Time steps in seconds // 259200 = 1 month
+    public static int rounds = 2147483647; // Amount of rounds to run the simulator for // 3000000 = 250.000 jaar
+    public static double time = 60 * 60; // Time steps in seconds // 259200 = 1 month
 
     /**
      * Object settings
      */
 
-    public static String sunName = "Sun"; // The name of the sun to calculate values TO
-    public static String[] objectNames = { "Jupiter", "Sedna" };  // The name of the object(s) your want to calculate the values OF
+    public static String[] objectNames = { "Earth" };  // The name of the object(s) your want to calculate the values OF
 
     /**
      * Output preferences
