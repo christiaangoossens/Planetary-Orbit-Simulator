@@ -13,7 +13,7 @@ public class SimulatorConfig {
      */
 
     public static String sunName = "Sun"; // The name of the sun to calculate values TO
-    public static String[] objectNames = { "Sedna" };  // The name of the object(s) your want to calculate the values OF
+    public static String[] objectNames = { "Jupiter", "Sedna" };  // The name of the object(s) your want to calculate the values OF
 
     /**
      * Output preferences

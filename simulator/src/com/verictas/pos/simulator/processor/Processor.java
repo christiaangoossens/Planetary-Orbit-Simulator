@@ -3,25 +3,31 @@ package com.verictas.pos.simulator.processor;
 import com.verictas.pos.simulator.Object;
 import com.verictas.pos.simulator.Simulator;
 import com.verictas.pos.simulator.SimulatorConfig;
+import com.verictas.pos.simulator.dataWriter.AOPDataWriter;
 import com.verictas.pos.simulator.dataWriter.DataWriter;
+import com.verictas.pos.simulator.dataWriter.PosDataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
 import com.verictas.pos.simulator.mathUtils.AOP;
 import com.verictas.pos.simulator.mathUtils.AU;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Processor {
-    private DataWriter writer;
+    private PosDataWriter writer;
+    private AOPDataWriter aopWriter;
     public HashMap<String, Object> initialObjectValues = new HashMap<>();
     public HashMap<String, SimpleObjectProcessor> objects = new HashMap<>();
-    public HashMap<String, ArrayList<Double>> arguments = new HashMap<>();
+    public HashMap<String, TreeMap<Integer, Double>> arguments = new HashMap<>();
 
     public Processor(Object[] objects) throws ProcessingException, WritingException {
         /**
          * Initialize DataWriter
          */
-        this.writer = new DataWriter();
+        this.writer = new PosDataWriter();
+        this.aopWriter = new AOPDataWriter();
 
         /**
          * Store the initial values of all the objects in memory (and to a file) for later use
@@ -53,11 +59,10 @@ public class Processor {
             if (Simulator.round % SimulatorConfig.moduloArgument == 0) {
                 if (arguments.get(objectName) == null) {
                     // If not defined
-                    ArrayList<Double> agmnts = new ArrayList<>();
+                    TreeMap<Integer, Double> agmnts = new TreeMap<>();
                     arguments.put(objectName, agmnts);
                 }
-
-                arguments.get(objectName).add(object.calculateAOP());
+                arguments.get(objectName).put(Simulator.round, object.calculateAOP());
             }
 
             this.objects.put(objectName, object);
@@ -69,11 +74,11 @@ public class Processor {
     private void write(HashMap<String, Object> objects) throws ProcessingException, WritingException {
         if (SimulatorConfig.skipUnnecessary) {
             for (String name : SimulatorConfig.objectNames) {
-                this.writer.write(objects.get(name), objects.get(SimulatorConfig.sunName));
+                this.writer.write(objects.get(name));
             }
         } else {
             for (Object object : objects.values()) {
-                this.writer.write(object, objects.get(SimulatorConfig.sunName));
+                this.writer.write(object);
             }
         }
     }
@@ -92,30 +97,41 @@ public class Processor {
     public void close() throws ProcessingException {
         try {
             this.writer.save();
+            System.out.println("");
 
             System.out.println("TOTAL RESULTS: " + arguments);
+            System.out.println("");
 
             for(String objectName : SimulatorConfig.objectNames) {
-                ArrayList<Double> arguments = this.arguments.get(objectName);
+                TreeMap<Integer, Double> arguments = this.arguments.get(objectName);
+
+                this.aopWriter.write(objectName, arguments);
+
                 double score = 0;
 
+                Double[] empty = new Double[arguments.size()];
+                Double[] agmnts = arguments.values().toArray(empty);
+
                 // Calculate score
-                for(int i = 1; i < arguments.size() - 1; i++) {
-                    score = score + Math.abs(arguments.get(i-1) - arguments.get(i));
+                for(int i = 1; i < agmnts.length - 1; i++) {
+                    score = score + Math.abs(agmnts[i-1] - agmnts[i]);
                 }
 
                 System.out.println("SCORE (" + objectName + "): " + score);
 
                 // CALCULATE AVERAGE
                 double sum = 0;
-                for (int i = 0; i < arguments.size(); i++){
-                    sum = sum + arguments.get(i);
+                for (int i = 0; i < agmnts.length; i++){
+                    sum = sum + agmnts[i];
                 }
                 // calculate average
-                double average = sum / arguments.size();
+                double average = sum / agmnts.length;
 
                 System.out.println("AVERAGE (" + objectName + ") (degrees): " + Math.toDegrees(average));
+                System.out.println("");
             }
+
+            this.aopWriter.save();
         } catch(WritingException e) {
             throw new ProcessingException("An error occurred during creation of the file writer: " + e.toString());
         }
