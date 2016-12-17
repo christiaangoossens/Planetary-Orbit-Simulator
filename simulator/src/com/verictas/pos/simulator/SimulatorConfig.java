@@ -1,19 +1,37 @@
 package com.verictas.pos.simulator;
 
 public class SimulatorConfig {
+
+    /**
+     * (Example) Settings for the EARTH
+     * Rounds: 1051896 * (amount of years to run)
+     * Time: 30
+     */
+
+    /**
+     * (Example) Settings for SEDNA
+     * Rounds: 184000000 (approx. 1 million years)
+     * Time: 172800 (2 days)
+     */
+
+    /**
+     * (Example) Settings for 2012 VP113
+     * Rounds: 184000000 (approx. 1 million years)
+     * Time: 172800 (2 days)
+     */
     /**
      * Time settings
      */
 
-    public static int rounds = 3000000; // Amount of rounds to run the simulator for // 3000000 = 250.000 jaar
-    public static double time = 2592000; // Time steps in seconds // 259200 = 1 month
+    public static int rounds = 1051896*500; // Amount of rounds to run the simulator for // 3000000 = 250.000 jaar
+    public static double time = 30; // Time steps in seconds // 2592000 = 1 month
 
     /**
      * Object settings
      */
 
     public static String sunName = "Sun"; // The name of the sun to calculate values TO
-    public static String[] objectNames = { "Sedna", "2012 VP113" };  // The name of the object(s) your want to calculate the values OF
+    public static String[] objectNames = { "Earth" };  // The name of the object(s) your want to calculate the values OF
 
     /**
      * Output preferences
