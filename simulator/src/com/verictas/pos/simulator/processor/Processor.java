@@ -97,9 +97,7 @@ public class Processor {
                 Vector3d speed = new Vector3d(AOPobject.speed);
                 arguments.get(objectName).put(Simulator.round, AOP.calculate(pos, speed));
 
-                if (SimulatorConfig.logConsole) {
-                    System.out.println("Last rounds AOP: " + AOP.calculate(pos, speed));
-                }
+                System.out.println("INFO:: Last rounds AOP: " + AOP.calculate(pos, speed));
             } else if (!SimulatorConfig.autoModulo) {
                 if (Simulator.round % SimulatorConfig.moduloArgument == 0) {
                     if (arguments.get(objectName) == null) {

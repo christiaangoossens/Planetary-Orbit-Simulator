@@ -27,15 +27,15 @@ public class SimulatorConfig {
      * Time settings
      */
 
-    public static int rounds = 525948*2*500; // Amount of rounds to run the simulator for
-    public static double time = 30; // Time steps in seconds
+    public static int rounds = 184000000; // Amount of rounds to run the simulator for
+    public static double time = 172800; // Time steps in seconds
 
     /**
      * Object settings
      */
 
     public static String sunName = "Sun"; // The name of the sun to calculate values TO
-    public static String[] objectNames = { "Earth" };  // The name of the object(s) your want to calculate the values OF
+    public static String[] objectNames = { "2012 VP113" };  // The name of the object(s) your want to calculate the values OF
 
     /**
      * Output preferences
@@ -49,7 +49,7 @@ public class SimulatorConfig {
     /**
      * Console settings
      */
-    public static boolean logConsole = true;
+    public static boolean logConsole = false;
     public static int skipConsole = 100000;
 
     /**
