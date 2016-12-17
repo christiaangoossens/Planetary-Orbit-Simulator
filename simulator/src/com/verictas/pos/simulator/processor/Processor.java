@@ -7,8 +7,10 @@ import com.verictas.pos.simulator.dataWriter.AOPDataWriter;
 import com.verictas.pos.simulator.dataWriter.PosDataWriter;
 import com.verictas.pos.simulator.dataWriter.WritingException;
 import com.verictas.pos.simulator.mathUtils.AOP;
+import com.verictas.pos.simulator.mathUtils.AU;
 
 import javax.vecmath.Vector3d;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -16,6 +18,7 @@ public class Processor {
     private PosDataWriter writer;
     private AOPDataWriter aopWriter;
     public HashMap<String, Object> initialObjectValues = new HashMap<>();
+    public HashMap<String, ObjectProcessor> objects = new HashMap<>();
     public HashMap<String, TreeMap<Integer, Double>> arguments = new HashMap<>();
 
     public Processor(Object[] objects) throws ProcessingException, WritingException {
@@ -32,6 +35,14 @@ public class Processor {
 
         // Write initial values to file
         this.writePos(initialObjectValues);
+
+        /**
+         * Create the object processing array
+         */
+        for (Object object : initialObjectValues.values()) {
+            this.objects.put(object.name, new ObjectProcessor());
+            this.objects.get(object.name).setStartingPosition(object.position);
+        }
     }
 
     public void process(Object[] objectArray) throws ProcessingException, WritingException {
@@ -43,8 +54,37 @@ public class Processor {
          * Calculate AOP for specified objects
          */
         for(String objectName : SimulatorConfig.objectNames) {
-            // Check if we need to calculate the AOP
-            if (Simulator.round % SimulatorConfig.moduloArgument == 0) {
+            // Process the aphelion & perihelion for reference
+            ObjectProcessor object = this.objects.get(objectName);
+
+            object.setObjectData(objects.get(objectName));
+            object.setReferenceObjectData(objects.get(SimulatorConfig.sunName));
+
+            // Check if the object has gone round last round
+
+            boolean round = object.processRoundCheck();
+            if (round) {
+                System.out.println("\n\n============== ROTATION DATA: " + objectName.toUpperCase() + ", ROUND " + (Simulator.round - 1) + " =============");
+                System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in km: " + object.aphelionDistance / 1000);
+                System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during apastron in AU: " + AU.convertFromMeter(object.aphelionDistance));
+                System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in km: " + object.perihelionDistance / 1000);
+                System.out.println("Distance from (the) " + SimulatorConfig.sunName + " during periastron in AU: " + AU.convertFromMeter(object.perihelionDistance));
+                System.out.println("===========================================================================\n\n");
+
+                object.reset();
+
+                // Reset starting position
+                this.objects.get(objectName).setStartingPosition(objects.get(objectName).position);
+            }
+
+            object.processAphelionAndPerihelion();
+            this.objects.put(objectName, object);
+
+
+            /**
+             * Calculate AOP
+             */
+            if (SimulatorConfig.autoModulo && round) {
                 if (arguments.get(objectName) == null) {
                     // If not defined
                     TreeMap<Integer, Double> agmnts = new TreeMap<>();
@@ -52,10 +92,28 @@ public class Processor {
                 }
 
                 // Calculate AOP and put it in the array
-                Object object = objects.get(objectName);
-                Vector3d pos = new Vector3d(object.position);
-                Vector3d speed = new Vector3d(object.speed);
+                Object AOPobject = objects.get(objectName);
+                Vector3d pos = new Vector3d(AOPobject.position);
+                Vector3d speed = new Vector3d(AOPobject.speed);
                 arguments.get(objectName).put(Simulator.round, AOP.calculate(pos, speed));
+
+                if (SimulatorConfig.logConsole) {
+                    System.out.println("Last rounds AOP: " + AOP.calculate(pos, speed));
+                }
+            } else if (!SimulatorConfig.autoModulo) {
+                if (Simulator.round % SimulatorConfig.moduloArgument == 0) {
+                    if (arguments.get(objectName) == null) {
+                        // If not defined
+                        TreeMap<Integer, Double> agmnts = new TreeMap<>();
+                        arguments.put(objectName, agmnts);
+                    }
+
+                    // Calculate AOP and put it in the array
+                    Object AOPobject = objects.get(objectName);
+                    Vector3d pos = new Vector3d(AOPobject.position);
+                    Vector3d speed = new Vector3d(AOPobject.speed);
+                    arguments.get(objectName).put(Simulator.round, AOP.calculate(pos, speed));
+                }
             }
         }
     }

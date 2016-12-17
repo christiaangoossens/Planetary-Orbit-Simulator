@@ -16,8 +16,7 @@ public class AOP {
         //System.out.println("n = " + ascendingNode);
 
         // ECCENTRICITY VECTOR
-       // double mu = 1.32712440018E20;
-        double mu = 3.9860044189E14;
+        double mu = 1.32712440018E20;
 
         Vector3d upCross = new Vector3d(0,0,0);
         upCross.cross(speed, orbitalMomentum);
