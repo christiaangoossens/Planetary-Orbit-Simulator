@@ -19,6 +19,8 @@ public class Main {
      * The full license is included in the git repository as LICENSE.md
      */
 
+    public static int version = 1;
+
     public static void main(String[] args) {
         /**
          * Object definitions
