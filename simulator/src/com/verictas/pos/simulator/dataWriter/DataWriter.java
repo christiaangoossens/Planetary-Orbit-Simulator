@@ -1,5 +1,6 @@
 package com.verictas.pos.simulator.dataWriter;
 
+import com.verictas.pos.simulator.Main;
 import com.verictas.pos.simulator.SimulatorConfig;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public class DataWriter {
             String directory =  System.getProperty("user.home") + File.separator + "simulatorExports";
             File directoryPath = new File(directory);
 
-            String path = directory + File.separator + getCurrentTimeStamp() + "-" + filenameAppendix + ".txt";
+            String path = directory + File.separator + "v" + Main.version + "-" + getCurrentTimeStamp() + "-" + filenameAppendix + ".txt";
             System.out.println("WRITING DATA TO: " + path);
 
             /**
