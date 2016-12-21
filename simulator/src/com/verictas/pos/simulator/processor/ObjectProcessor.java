@@ -216,7 +216,7 @@ public class ObjectProcessor {
 
         Node returnNode = new Node();
 
-        if (lastMaxRound == -1 || lastMaxRound == -1) {
+        if (lastMaxRound == -1 || lastMinRound == -1) {
             lastMinRound = min.round;
             lastMaxRound = max.round;
         } else {

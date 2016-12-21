@@ -53,7 +53,7 @@ public class Main {
          * Object listing
          */
 
-        Object[] objects = {sun, earth, moon, jupiter, mars, venus};
+        Object[] objects = {}; // Fill in the objects to be simulated
 
 
         /**

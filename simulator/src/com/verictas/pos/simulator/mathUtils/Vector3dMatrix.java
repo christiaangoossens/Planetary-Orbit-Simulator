@@ -10,7 +10,7 @@ public class Vector3dMatrix extends GMatrix {
      * @param m The number of columns.
      */
     public Vector3dMatrix(int n, int m) {
-        // Change the size to suit Vector3f
+        // Change the size to suit Vector3d
         super(n, m * 3);
         this.setZero();
     }
